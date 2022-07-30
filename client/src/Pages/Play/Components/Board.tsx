@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { initializeBoard } from "../../Utils/initializeBoard";
+import { initializeBoard, checkWinner, Cell } from "../Utils/";
 import styles from "./Styles/Board.module.css";
 
+/**
+ * Draw the connect 4 board to the screen
+ * 
+ * Checks for a winner every time a player make a move
+ *   
+ */
 export default function Board() : JSX.Element 
 {
     // keep track of the state of the current board
@@ -18,7 +24,7 @@ export default function Board() : JSX.Element
     function onClickCellHandler(col : number) 
     {
         // prevent the user from making a move when a column is full
-        if(currentBoard[0][col] !== 0) {
+        if(currentBoard[0][col] !== Cell.EMPTY) {
             console.log("Invalid placement");
             return;
         }
@@ -29,18 +35,21 @@ export default function Board() : JSX.Element
             const cell = currentBoard[i][col];
 
             // cell is found empty
-            if(cell === 0) {
+            if(cell === Cell.EMPTY) {
                 // update board
-                isPlayer1Turn ? currentBoard[i][col] = 1 : currentBoard[i][col] = 2;
+                isPlayer1Turn ? currentBoard[i][col] = Cell.PLAYER_1 : currentBoard[i][col] = Cell.PLAYER_2;
                 setCurrentBoard(currentBoard);
 
                 // switch turns
                 setPlayer1Turn(!isPlayer1Turn);
                 break;
             }
-        }
 
-        console.log(currentBoard);
+        }
+        
+        if(checkWinner(currentBoard) !== Cell.EMPTY) {
+            console.log("a player wins");
+        }
     }
 
     return (
@@ -51,7 +60,7 @@ export default function Board() : JSX.Element
                     <div className={styles.row} key={i}>
                         {row.map((cell, j) => 
                             <div key={j} className={
-                                cell === 0 ? styles.emptyCell : (cell === 1 ? styles.player1Cell : styles.player2Cell)
+                                cell === Cell.EMPTY ? styles.emptyCell : (cell === Cell.PLAYER_1 ? styles.player1Cell : styles.player2Cell)
                             } onClick={() => onClickCellHandler(j)}></div>)}
                     </div>)
                 }

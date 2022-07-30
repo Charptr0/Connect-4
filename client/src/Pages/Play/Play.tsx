@@ -1,5 +1,5 @@
-import Board from "../Components/Play/Board";
-import styles from "./Styles/Play.module.css";
+import Board from "./Components/Board";
+import styles from "./Play.module.css";
 
 export default function Play() : JSX.Element 
 {
