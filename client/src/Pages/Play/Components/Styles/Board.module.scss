@@ -3,33 +3,27 @@
     display: flex;
 }
 
-.emptyCell {
+.cell {
     width: 100px;
     height: 100px;
     border: 1.5px solid black;
     border-radius: 50%;
     cursor: pointer;
     margin: 15px;
+}
+
+.emptyCell {
+    @extend .cell;
     background-color: white;
 }
 
 .player1Cell {
-    width: 100px;
-    height: 100px;
-    border: 1.5px solid black;
-    border-radius: 50%;
-    cursor: pointer;
-    margin: 15px;
+    @extend .cell;
     background-color: yellow;
 }
 
 .player2Cell {
-    width: 100px;
-    height: 100px;
-    border: 1.5px solid black;
-    border-radius: 50%;
-    cursor: pointer;
-    margin: 15px;
+    @extend .cell;
     background-color: red;
 }
 
