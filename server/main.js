@@ -6,11 +6,9 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", socket => {
-    console.log("A user has connected");
-
-    socket.on("send_message", msg => {
-        socket.broadcast.emit("got_message", msg);
-    })
+    socket.on("playerMoved", (board, isPlayer1Turn) => {
+        socket.broadcast.emit("updateBoard", board, !isPlayer1Turn);
+    });
 });
 
 const port = process.env.PORT || 4000;
