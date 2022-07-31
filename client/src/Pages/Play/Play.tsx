@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Board from "./Components/Board";
-import styles from "./Play.module.css";
+import styles from "./Play.module.scss";
 import { io } from "socket.io-client";
 import { SocketProvider } from "./Context/SocketContext";
 import { Cell, checkWinner, initializeBoard } from "./Utils";

@@ -1,5 +1,5 @@
 import { Cell } from "../Utils";
-import styles from "./Styles/Board.module.css";
+import styles from "./Styles/Board.module.scss";
 
 interface Props {
     board : number[][],
@@ -13,7 +13,6 @@ interface Props {
 export default function Board(props : Props) : JSX.Element 
 {
     return (
-    <>
         <div className={styles.boardContainer}>
             {props.board.map((row, i) => {
                 return (
@@ -25,6 +24,5 @@ export default function Board(props : Props) : JSX.Element
                     </div>)
                 }
             )}
-        </div>
-    </>)
+        </div>)
 }
