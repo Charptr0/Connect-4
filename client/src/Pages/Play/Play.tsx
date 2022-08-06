@@ -9,7 +9,7 @@ const socket = io("http://localhost:4000");
 export default function Play() : JSX.Element 
 {
     const [currentBoard, setCurrentBoard] = useState<number[][]>(initializeBoard());
-    const [isPlayer1Turn, setPlayer1Turn] = useState(true);
+    const [isPlayer1Turn, setPlayer1Turn] = useState<boolean>(true);
     const [allowToMove, setAllowToMove] = useState<boolean>(true);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
 
@@ -64,7 +64,6 @@ export default function Play() : JSX.Element
                 isPlayer1Turn ? currentBoard[i][col] = Cell.PLAYER_1 : currentBoard[i][col] = Cell.PLAYER_2;
                 setCurrentBoard(currentBoard);
 
-                // 
                 setAllowToMove(false);
 
                 socket.emit("playerMoved", currentBoard, isPlayer1Turn);

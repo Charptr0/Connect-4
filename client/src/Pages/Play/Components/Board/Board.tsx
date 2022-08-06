@@ -1,4 +1,5 @@
 import { Cell } from "../../Utils";
+import { findOpenCell } from "../../Utils/findOpenCell";
 import styles from "./Board.module.scss";
 import {useBoardRef} from "./useBoardRef";
 
@@ -13,29 +14,36 @@ interface Props {
  */
 export default function Board(props : Props) : JSX.Element 
 {
+    // create div references for each cell
     const boardRef = useBoardRef();
-
+    
+    /**
+     * Fill in the cell with the intended color as a preview for the intended move 
+     * @param col - The selected columnNumber
+     */
     function onHover(col : number) {
-        for(let i = props.board.length - 1; i >= 0; i--) {
-            if(props.board[i][col] === Cell.EMPTY) {
-                const div : HTMLDivElement = boardRef[i][col].current;
+        // grab intended div
+        const div : HTMLDivElement | null = findOpenCell(props.board, boardRef, col);
 
-                props.isPlayer1Turn ?
-                    div.style.backgroundColor = "yellow" : div.style.backgroundColor = "red";
+        if(!div) return;
 
-                return;
-            }
-        }
+        // fill into the cell
+        props.isPlayer1Turn ?
+            div.style.backgroundColor = "yellow" : div.style.backgroundColor = "red";
     }
 
+    /**
+     * Return the cell back the the original color after the mouse leaves
+     * @param col - The selected columnNumber
+     */
     function onLeave(col : number) {
-        for(let i = props.board.length - 1; i >= 0; i--) {
-            if(props.board[i][col] === Cell.EMPTY) {
-                const div : HTMLDivElement = boardRef[i][col].current;
-                div.style.backgroundColor = 'white';
-                return;
-            }
-        }
+        // grab intended div
+        const div : HTMLDivElement | null = findOpenCell(props.board, boardRef, col);
+
+        if(!div) return;
+
+        // clear the color
+        div.style.backgroundColor = 'white';
     }
 
     return (
