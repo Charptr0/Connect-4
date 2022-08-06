@@ -21,7 +21,7 @@ export default function Board(props : Props) : JSX.Element
                 const div : HTMLDivElement = boardRef[i][col].current;
 
                 props.isPlayer1Turn ?
-                    div.style.background = "yellow" : div.style.background = "red";
+                    div.style.backgroundColor = "yellow" : div.style.backgroundColor = "red";
 
                 return;
             }
@@ -32,7 +32,7 @@ export default function Board(props : Props) : JSX.Element
         for(let i = props.board.length - 1; i >= 0; i--) {
             if(props.board[i][col] === Cell.EMPTY) {
                 const div : HTMLDivElement = boardRef[i][col].current;
-                div.style.backgroundColor = 'white'
+                div.style.backgroundColor = 'white';
                 return;
             }
         }

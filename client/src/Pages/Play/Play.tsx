@@ -21,6 +21,8 @@ export default function Play() : JSX.Element
 
         socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);
+            console.log(board);
+            
 
             if(checkWinner(board) !== Cell.EMPTY) {
                 setWinnerFound(true);
