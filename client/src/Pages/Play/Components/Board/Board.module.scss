@@ -19,12 +19,12 @@
 
 .player1Cell {
     @extend .cell;
-    background-color: yellow;
+    background-color: yellow !important;
 }
 
 .player2Cell {
     @extend .cell;
-    background-color: red;
+    background-color: red !important;
 }
 
 .boardContainer {

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import Board from "./Components/Board";
+import Board from "./Components/Board/Board";
 import styles from "./Play.module.scss";
 import { io } from "socket.io-client";
-import { SocketProvider } from "./Context/SocketContext";
 import { Cell, checkWinner, initializeBoard } from "./Utils";
 
 const socket = io("http://localhost:4000");
@@ -10,7 +9,7 @@ const socket = io("http://localhost:4000");
 export default function Play() : JSX.Element 
 {
     const [currentBoard, setCurrentBoard] = useState<number[][]>(initializeBoard());
-    const [isPlayer1Turn, setPlayer1Turn] = useState(true);
+    const [isPlayer1Turn, setPlayer1Turn] = useState<boolean>(true);
     const [allowToMove, setAllowToMove] = useState<boolean>(true);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
 
@@ -22,6 +21,8 @@ export default function Play() : JSX.Element
 
         socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);
+            console.log(board);
+            
 
             if(checkWinner(board) !== Cell.EMPTY) {
                 setWinnerFound(true);
@@ -63,7 +64,6 @@ export default function Play() : JSX.Element
                 isPlayer1Turn ? currentBoard[i][col] = Cell.PLAYER_1 : currentBoard[i][col] = Cell.PLAYER_2;
                 setCurrentBoard(currentBoard);
 
-                // 
                 setAllowToMove(false);
 
                 socket.emit("playerMoved", currentBoard, isPlayer1Turn);
@@ -78,12 +78,15 @@ export default function Play() : JSX.Element
     }
 
     return (
-        <SocketProvider>
+        <>
             {winnerFound && <div>A winner has been found</div>}
             {!allowToMove && !winnerFound && <div>Waiting for your opponent...</div>}
             <div className={styles.flexContainer}>
-                <Board board={currentBoard}  isPlayer1Turn={isPlayer1Turn} onPlayerMoveHandler={onPlayerMove}/>
+                <Board 
+                    board={currentBoard}  
+                    isPlayer1Turn={isPlayer1Turn} 
+                    onPlayerMoveHandler={onPlayerMove}/>
             </div>
-        </SocketProvider>
+        </>
     )
 }
