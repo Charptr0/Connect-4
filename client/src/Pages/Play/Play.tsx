@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import Board from "./Components/Board";
+import Board from "./Components/Board/Board";
 import styles from "./Play.module.scss";
 import { io } from "socket.io-client";
-import { SocketProvider } from "./Context/SocketContext";
 import { Cell, checkWinner, initializeBoard } from "./Utils";
 
 const socket = io("http://localhost:4000");
@@ -78,12 +77,15 @@ export default function Play() : JSX.Element
     }
 
     return (
-        <SocketProvider>
+        <>
             {winnerFound && <div>A winner has been found</div>}
             {!allowToMove && !winnerFound && <div>Waiting for your opponent...</div>}
             <div className={styles.flexContainer}>
-                <Board board={currentBoard}  isPlayer1Turn={isPlayer1Turn} onPlayerMoveHandler={onPlayerMove}/>
+                <Board 
+                    board={currentBoard}  
+                    isPlayer1Turn={isPlayer1Turn} 
+                    onPlayerMoveHandler={onPlayerMove}/>
             </div>
-        </SocketProvider>
+        </>
     )
 }
