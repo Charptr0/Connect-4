@@ -3,18 +3,28 @@ import Board from "./Components/Board/Board";
 import styles from "./Play.module.scss";
 import { io } from "socket.io-client";
 import { Cell, checkWinner, initializeBoard } from "./Utils";
+import { useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:4000");
 
 export default function Play() : JSX.Element 
 {
+    const navigate = useNavigate();
+
     const [currentBoard, setCurrentBoard] = useState<number[][]>(initializeBoard());
     const [isPlayer1Turn, setPlayer1Turn] = useState<boolean>(true);
     const [allowToMove, setAllowToMove] = useState<boolean>(true);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
+    const [username, setUsername] = useState<string>('');
 
+    useEffect(() => { 
+        if(!sessionStorage.getItem('roomId')) {
+            navigate('/');
+            return;
+        }
 
-    useEffect(() => {    
+        setUsername(sessionStorage.getItem('username') || 'Guest');
+
         socket.on("connect", () => {
             console.log(`connected with id ${socket.id}`);
         });
@@ -36,7 +46,7 @@ export default function Play() : JSX.Element
 
         });
 
-    }, [currentBoard]);
+    }, [currentBoard, navigate]);
 
     /**
      * Update the board and send the request to the other player
@@ -79,6 +89,7 @@ export default function Play() : JSX.Element
 
     return (
         <>
+            <div>Hello, {username}</div>
             {winnerFound && <div>A winner has been found</div>}
             {!allowToMove && !winnerFound && <div>Waiting for your opponent...</div>}
             <div className={styles.flexContainer}>
