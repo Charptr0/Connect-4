@@ -27,7 +27,12 @@ export default function Play() : JSX.Element
 
         socket.on("connect", () => {
             console.log(`connected with id ${socket.id}`);
+            socket.emit("joinRoom", sessionStorage.getItem('roomId'));
         });
+
+        socket.on("joinedRoom", () => {
+            console.log("A user has joined your room");
+        })
 
         socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);

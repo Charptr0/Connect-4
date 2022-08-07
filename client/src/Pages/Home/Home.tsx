@@ -36,8 +36,11 @@ export default function Home() : JSX.Element
         event.preventDefault();
         
         // grab username and room id
-        const username = usernameRef.current?.value;
-        const roomId = roomRef.current?.value;
+        const username = usernameRef.current?.value || 'Guest';
+        const roomId = roomRef.current?.value || '';
+        
+        sessionStorage.setItem("roomId", roomId);
+        sessionStorage.setItem("username", username);
         
         navigate("/play");
     }

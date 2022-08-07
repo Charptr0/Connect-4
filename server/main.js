@@ -1,14 +1,22 @@
 const server = require("http").createServer();
+require("dotenv").config();
 const io = require("socket.io")(server, {
     cors : {
-        origin : ["http://localhost:3000"]
+        origin : [process.env.FRONTEND_HOST]
     },
 });
 
 io.on("connection", socket => {
+    socket.on("joinRoom", roomId => {
+        console.log(`Joining room ${roomId}`);
+        socket.join(roomId);
+        socket.to(roomId).emit("joinedRoom");
+    });
+
     socket.on("playerMoved", (board, isPlayer1Turn) => {
         socket.broadcast.emit("updateBoard", board, !isPlayer1Turn);
     });
+
 });
 
 const port = process.env.PORT || 4000;
