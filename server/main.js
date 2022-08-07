@@ -11,6 +11,9 @@ io.on("connection", socket => {
         console.log(`Joining room ${roomId}`);
         socket.join(roomId);
         socket.to(roomId).emit("joinedRoom");
+        const clients = io.sockets.adapter.rooms.get(roomId);
+
+        console.log(clients.size);
     });
 
     socket.on("playerMoved", (board, isPlayer1Turn) => {

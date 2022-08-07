@@ -34,6 +34,12 @@ export default function Play() : JSX.Element
             console.log("A user has joined your room");
         })
 
+        // console log a message when the user disconnect from the socket
+        socket.on("disconnect", () => {
+            console.log(`disconnected from ${socket.id}`);
+            socket.disconnect();
+        });
+
         socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);
             console.log(board);

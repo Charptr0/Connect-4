@@ -27,6 +27,7 @@ export default function Home() : JSX.Element
 
         // go to room
         navigate('/play');
+        window.location.reload();
     }
 
     /**
@@ -41,8 +42,9 @@ export default function Home() : JSX.Element
         
         sessionStorage.setItem("roomId", roomId);
         sessionStorage.setItem("username", username);
-        
+
         navigate("/play");
+        window.location.reload();
     }
 
     return (<>
