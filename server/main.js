@@ -33,16 +33,23 @@ io.on("connection", socket => {
         socket.join(roomId);
         socket.to(roomId).emit("joinedRoom");
     });
-    
-    socket.on("playerMoved", (board, isPlayer1Turn, roomId) => {
-        console.log(getCurrentRoomSize(roomId));
-        if(getCurrentRoomSize(roomId) === 2) {
-            return socket.to(roomId).emit("updateBoard", board, !isPlayer1Turn);
-        }
-        
-        socket.to(roomId).emit("notEnoughPlayers", "hi");
+
+    socket.on("playerLeft", roomId => {
+        socket.to(roomId).emit("playerHasLeft");
+        console.log(`Someones left room ${roomId}`);
     });
 
+    socket.on('disconnect', () => {
+        socket.adapter.rooms.forEach((val, key) => {
+            socket.to(key).emit("playerLeft");
+        })
+
+        socket.disconnect();
+    });
+    
+    socket.on("playerMoved", (board, isPlayer1Turn, roomId) => {
+        socket.to(roomId).emit("updateBoard", board, !isPlayer1Turn);
+    });
 });
 
 

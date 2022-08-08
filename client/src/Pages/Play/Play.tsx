@@ -36,10 +36,9 @@ export default function Play() : JSX.Element
             socket.emit("joinRoom", getRoomId());
         });
 
-        socket.on('notEnoughPlayers', (msg) => {
-            console.log(`not enough players ${msg}`);
+        socket.on("disconnect", () => {
+            console.log(`A user has disconnected`);
         });
-
         socket.on("joinedRoom", () => {
             getCurrentPlayers().then(currentPlayers => {
                 console.log("A user has joined your room");
@@ -50,7 +49,6 @@ export default function Play() : JSX.Element
         socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);   
                      
-
             if(checkWinner(board) !== Cell.EMPTY) {
                 setWinnerFound(true);
                 setAllowToMove(false);
@@ -62,6 +60,17 @@ export default function Play() : JSX.Element
             }
 
         });
+
+        socket.on("playerLeft", () => {
+            console.log("The player left!");
+        });
+
+        window.addEventListener('beforeunload', () => {
+            // socket.emit('playerLeft', getRoomId());
+            sessionStorage.removeItem('roomId');
+        });
+
+
 
     }, [currentBoard, navigate]);
 
