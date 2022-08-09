@@ -2,11 +2,23 @@ import { useEffect, useState } from "react";
 import Board from "./Components/Board/Board";
 import styles from "./Play.module.scss";
 import { io } from "socket.io-client";
-import { Cell, checkWinner, initializeBoard, getRoomId, getCurrentPlayers } from "./Utils";
+import { 
+    Cell, 
+    checkWinner, 
+    initializeBoard, 
+    getCurrentPlayers,
+} from "./Utils";
+import {
+    getRoomId, 
+    getUsername
+} from '../../Utils';
 import { useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:4000");
 
+/**
+ * Render the page for playing online 
+ */
 export default function Play() : JSX.Element 
 {
     const navigate = useNavigate();
@@ -20,12 +32,17 @@ export default function Play() : JSX.Element
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => { 
+        // kick the user out of this page if they don't have a room id
         if(!sessionStorage.getItem('roomId')) {
             navigate('/');
             return;
         }
 
-        setUsername(sessionStorage.getItem('username') || 'Guest');
+        // set the current user to their username
+        // if no username was provided, default to guest
+        setUsername(getRoomId() || 'Guest');
+
+        // get the total amount of players
         getCurrentPlayers().then(currentPlayers => {
             setCurrentPlayers(currentPlayers);
             setLoading(false);
@@ -33,15 +50,12 @@ export default function Play() : JSX.Element
 
         socket.on("connect", () => {
             console.log(`connected with id ${socket.id}`);
-            socket.emit("joinRoom", getRoomId());
+            socket.emit("joinRoom", getRoomId(), getUsername());
         });
 
-        socket.on("disconnect", () => {
-            console.log(`A user has disconnected`);
-        });
-        socket.on("joinedRoom", () => {
+        socket.on("joinedRoom", (username) => {
             getCurrentPlayers().then(currentPlayers => {
-                console.log("A user has joined your room");
+                console.log(`${username} has joined your room`);
                 setCurrentPlayers(currentPlayers)
             }).catch(err => console.log(err));
         })
@@ -64,16 +78,18 @@ export default function Play() : JSX.Element
         socket.on("playerLeft", () => {
             console.log("The player left!");
         });
-
-        window.addEventListener('beforeunload', () => {
-            // socket.emit('playerLeft', getRoomId());
+        
+        window.addEventListener('beforeunload', () => {            
             sessionStorage.removeItem('roomId');
         });
 
+        window.onhashchange = () => {
+            console.log("Hash changed");
+        }
 
-
+        
     }, [currentBoard, navigate]);
-
+    
     /**
      * Update the board and send the request to the other player
      * 
