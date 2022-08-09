@@ -1,13 +1,27 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {v4 as uuid } from "uuid";
+import { getRoomId } from "../../Utils";
 
+/**
+ * Render the front page 
+ */
 export default function Home() : JSX.Element
 {
     const navigate = useNavigate();
 
     const usernameRef = useRef<HTMLInputElement>(null);
     const roomRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if(getRoomId()) {
+            window.location.reload();
+        }
+        
+        console.log("here");
+
+    }, []);
+    
 
     /**
      * Create a new room
@@ -47,7 +61,8 @@ export default function Home() : JSX.Element
         window.location.reload();
     }
 
-    return (<>
+    return (
+    <>
         <div>Home</div>
         <form>
             <label>Username</label><br></br>

@@ -27,11 +27,11 @@ function getCurrentRoomSize(roomId) {
 
 
 io.on("connection", socket => {
-    socket.on("joinRoom", roomId => {
+    socket.on("joinRoom", (roomId, username) => {
         console.log(`Joining room ${roomId}`);
 
         socket.join(roomId);
-        socket.to(roomId).emit("joinedRoom");
+        socket.to(roomId).emit("joinedRoom", username);
     });
 
     socket.on("playerLeft", roomId => {
@@ -51,7 +51,6 @@ io.on("connection", socket => {
         socket.to(roomId).emit("updateBoard", board, !isPlayer1Turn);
     });
 });
-
 
 app.get("/get-room-size/:roomId", (req, res) => {
     const roomId = req.params.roomId;
