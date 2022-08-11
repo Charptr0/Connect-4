@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Board from "./Components/Board/Board";
 import styles from "./Play.module.scss";
-import { io } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { 
     Cell, 
     checkWinner, 
@@ -12,16 +12,16 @@ import {
     getRoomId, 
     getUsername
 } from '../../Utils';
-import { useNavigate } from "react-router-dom";
 
-const socket = io("http://localhost:4000");
+interface Props {
+    socket: Socket;
+}
 
 /**
  * Render the page for playing online 
  */
-export default function Play() : JSX.Element 
+export default function Play(props : Props) : JSX.Element 
 {
-    const navigate = useNavigate();
 
     const [currentBoard, setCurrentBoard] = useState<number[][]>(initializeBoard());
     const [isPlayer1Turn, setPlayer1Turn] = useState<boolean>(true);
@@ -34,9 +34,10 @@ export default function Play() : JSX.Element
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
         if(!sessionStorage.getItem('roomId')) {
-            navigate('/');
             return;
         }
+        
+        props.socket.connect();
 
         // set the current user to their username
         // if no username was provided, default to guest
@@ -48,19 +49,19 @@ export default function Play() : JSX.Element
             setLoading(false);
         })
 
-        socket.on("connect", () => {
-            console.log(`connected with id ${socket.id}`);
-            socket.emit("joinRoom", getRoomId(), getUsername());
+        props.socket.on("connect", () => {
+            console.log(`connected with id ${props.socket.id}`);
+            props.socket.emit("joinRoom", getRoomId(), getUsername());
         });
 
-        socket.on("joinedRoom", (username) => {
+        props.socket.on("joinedRoom", (username) => {
             getCurrentPlayers().then(currentPlayers => {
                 console.log(`${username} has joined your room`);
                 setCurrentPlayers(currentPlayers)
             }).catch(err => console.log(err));
         })
 
-        socket.on("updateBoard", (board, isPlayer1Turn) => {
+        props.socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);   
                      
             if(checkWinner(board) !== Cell.EMPTY) {
@@ -75,7 +76,7 @@ export default function Play() : JSX.Element
 
         });
 
-        socket.on("playerLeft", () => {
+        props.socket.on("playerLeft", () => {
             console.log("The player left!");
         });
         
@@ -88,7 +89,7 @@ export default function Play() : JSX.Element
         }
 
         
-    }, [currentBoard, navigate]);
+    }, [currentBoard, props.socket]);
     
     /**
      * Update the board and send the request to the other player
@@ -122,7 +123,7 @@ export default function Play() : JSX.Element
 
                 setAllowToMove(false);
 
-                socket.emit("playerMoved", currentBoard, isPlayer1Turn, sessionStorage.getItem('roomId'));
+                props.socket.emit("playerMoved", currentBoard, isPlayer1Turn, sessionStorage.getItem('roomId'));
                 break;
             }
         }

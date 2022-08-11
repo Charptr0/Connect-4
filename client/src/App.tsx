@@ -1,17 +1,21 @@
-import React from 'react';
-// import logo from './logo.svg';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { io } from 'socket.io-client';
+import { usePages } from './Hooks/usePages';
 import Home from './Pages/Home/Home';
 import Play from './Pages/Play/Play';
+import { Page } from './Utils';
+
+const socket = io("http://localhost:4000", {
+  autoConnect : false,
+});
 
 function App() {
+  const [page, switchPage] = usePages(Page.Home);
+  
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />}/>
-        <Route path="/play" element={<Play />}/>
-      </Routes>
-    </BrowserRouter>
+  <>
+    {page === Page.Home && <Home switchPage={switchPage} />}
+    {page === Page.PlayOnline && <Play socket={socket} />}
+  </>
   );
 }
 

@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import {v4 as uuid } from "uuid";
-import { getRoomId } from "../../Utils";
+import { getRoomId, Page } from "../../Utils";
 
+interface Props {
+    switchPage : Function;
+}
 /**
  * Render the front page 
  */
-export default function Home() : JSX.Element
+export default function Home(props : Props) : JSX.Element
 {
-    const navigate = useNavigate();
-
     const usernameRef = useRef<HTMLInputElement>(null);
     const roomRef = useRef<HTMLInputElement>(null);
 
@@ -17,9 +17,7 @@ export default function Home() : JSX.Element
         if(getRoomId()) {
             window.location.reload();
         }
-        
-        console.log("here");
-
+    
     }, []);
     
 
@@ -40,8 +38,7 @@ export default function Home() : JSX.Element
         sessionStorage.setItem("username", username);
 
         // go to room
-        navigate('/play');
-        window.location.reload();
+        props.switchPage(Page.PlayOnline);
     }
 
     /**
@@ -57,8 +54,7 @@ export default function Home() : JSX.Element
         sessionStorage.setItem("roomId", roomId);
         sessionStorage.setItem("username", username);
 
-        navigate("/play");
-        window.location.reload();
+        props.switchPage(Page.PlayOnline);
     }
 
     return (
