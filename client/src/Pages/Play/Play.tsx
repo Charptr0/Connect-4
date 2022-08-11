@@ -1,66 +1,68 @@
 import { useEffect, useState } from "react";
 import Board from "./Components/Board/Board";
 import styles from "./Play.module.scss";
-import { io } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { 
     Cell, 
     checkWinner, 
+    getCurrentPlayers, 
     initializeBoard, 
-    getCurrentPlayers,
 } from "./Utils";
 import {
     getRoomId, 
     getUsername
 } from '../../Utils';
-import { useNavigate } from "react-router-dom";
 
-const socket = io("http://localhost:4000");
+interface Props {
+    socket: Socket;
+}
 
 /**
  * Render the page for playing online 
  */
-export default function Play() : JSX.Element 
+export default function Play(props : Props) : JSX.Element 
 {
-    const navigate = useNavigate();
-
     const [currentBoard, setCurrentBoard] = useState<number[][]>(initializeBoard());
     const [isPlayer1Turn, setPlayer1Turn] = useState<boolean>(true);
     const [allowToMove, setAllowToMove] = useState<boolean>(true);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
-    const [currentPlayers, setCurrentPlayers] = useState<number>(1);
-    const [loading, setLoading] = useState<boolean>(true);
-
+    const [totalPlayers, setTotalPlayers] = useState<number>(1);
+    
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
         if(!sessionStorage.getItem('roomId')) {
-            navigate('/');
             return;
         }
-
+        
         // set the current user to their username
         // if no username was provided, default to guest
         setUsername(getRoomId() || 'Guest');
 
-        // get the total amount of players
-        getCurrentPlayers().then(currentPlayers => {
-            setCurrentPlayers(currentPlayers);
-            setLoading(false);
-        })
-
-        socket.on("connect", () => {
-            console.log(`connected with id ${socket.id}`);
-            socket.emit("joinRoom", getRoomId(), getUsername());
+        window.addEventListener('beforeunload', () => {            
+            sessionStorage.removeItem('roomId');
+            props.socket.disconnect();
         });
 
-        socket.on("joinedRoom", (username) => {
-            getCurrentPlayers().then(currentPlayers => {
-                console.log(`${username} has joined your room`);
-                setCurrentPlayers(currentPlayers)
-            }).catch(err => console.log(err));
-        })
+        // open socket connection
+        props.socket.connect();
 
-        socket.on("updateBoard", (board, isPlayer1Turn) => {
+        // on open listener
+        props.socket.on("connect", async () => {
+            console.log(`connected with id ${props.socket.id}`);
+            props.socket.emit("joinRoom", getRoomId(), getUsername());
+
+            setTotalPlayers(await getCurrentPlayers());
+        });
+
+        // listener when a another user joined the room
+        props.socket.on("joinedRoom", async (username) => {
+            setTotalPlayers(await getCurrentPlayers());
+            console.log(`${username} has joined your room`);
+        });
+
+        // listener when a user make a move
+        props.socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);   
                      
             if(checkWinner(board) !== Cell.EMPTY) {
@@ -75,33 +77,23 @@ export default function Play() : JSX.Element
 
         });
 
-        socket.on("playerLeft", () => {
+        // listener when a user disconnect from the room
+        props.socket.on("playerLeft", async () => {
+            props.socket.disconnect();
+            setTotalPlayers(await getCurrentPlayers());
             console.log("The player left!");
         });
-        
-        window.addEventListener('beforeunload', () => {            
-            sessionStorage.removeItem('roomId');
-        });
 
-        window.onhashchange = () => {
-            console.log("Hash changed");
-        }
-
-        
-    }, [currentBoard, navigate]);
+    }, [currentBoard, props.socket]);
     
     /**
      * Update the board and send the request to the other player
      * 
      * @param col the column number that the user has clicked
      */
-    async function onPlayerMove(col : number)
+    function onPlayerMove(col : number)
     {
-        if(currentPlayers < 2) {
-            return;
-        }
-        
-        if(!allowToMove) return;
+        if(!allowToMove || totalPlayers < 2) return;
 
         // prevent the user from making a move when a column is full
         if(currentBoard[0][col] !== Cell.EMPTY) {
@@ -122,7 +114,7 @@ export default function Play() : JSX.Element
 
                 setAllowToMove(false);
 
-                socket.emit("playerMoved", currentBoard, isPlayer1Turn, sessionStorage.getItem('roomId'));
+                props.socket.emit("playerMoved", currentBoard, isPlayer1Turn, sessionStorage.getItem('roomId'));
                 break;
             }
         }
@@ -131,10 +123,6 @@ export default function Play() : JSX.Element
             setWinnerFound(true);
             setAllowToMove(false);
         }
-    }
-
-    if(loading) {
-        return <div>Loading...</div>
     }
 
     return (
