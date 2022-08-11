@@ -5,8 +5,8 @@ import { Socket } from "socket.io-client";
 import { 
     Cell, 
     checkWinner, 
+    getCurrentPlayers, 
     initializeBoard, 
-    getCurrentPlayers,
 } from "./Utils";
 import {
     getRoomId, 
@@ -27,7 +27,8 @@ export default function Play(props : Props) : JSX.Element
     const [allowToMove, setAllowToMove] = useState<boolean>(true);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
-
+    const [totalPlayers, setTotalPlayers] = useState<number>(1);
+    
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
         if(!sessionStorage.getItem('roomId')) {
@@ -40,19 +41,27 @@ export default function Play(props : Props) : JSX.Element
 
         window.addEventListener('beforeunload', () => {            
             sessionStorage.removeItem('roomId');
+            props.socket.disconnect();
         });
 
-        props.socket.connect();   
+        // open socket connection
+        props.socket.connect();
 
-        props.socket.on("connect", () => {
+        // on open listener
+        props.socket.on("connect", async () => {
             console.log(`connected with id ${props.socket.id}`);
             props.socket.emit("joinRoom", getRoomId(), getUsername());
+
+            setTotalPlayers(await getCurrentPlayers());
         });
 
-        props.socket.on("joinedRoom", (username) => {
+        // listener when a another user joined the room
+        props.socket.on("joinedRoom", async (username) => {
+            setTotalPlayers(await getCurrentPlayers());
             console.log(`${username} has joined your room`);
         });
 
+        // listener when a user make a move
         props.socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);   
                      
@@ -68,8 +77,10 @@ export default function Play(props : Props) : JSX.Element
 
         });
 
-        props.socket.on("playerLeft", () => {
+        // listener when a user disconnect from the room
+        props.socket.on("playerLeft", async () => {
             props.socket.disconnect();
+            setTotalPlayers(await getCurrentPlayers());
             console.log("The player left!");
         });
 
@@ -80,10 +91,9 @@ export default function Play(props : Props) : JSX.Element
      * 
      * @param col the column number that the user has clicked
      */
-    async function onPlayerMove(col : number)
+    function onPlayerMove(col : number)
     {
-        
-        if(!allowToMove) return;
+        if(!allowToMove || totalPlayers < 2) return;
 
         // prevent the user from making a move when a column is full
         if(currentBoard[0][col] !== Cell.EMPTY) {
