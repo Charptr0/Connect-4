@@ -22,14 +22,11 @@ interface Props {
  */
 export default function Play(props : Props) : JSX.Element 
 {
-
     const [currentBoard, setCurrentBoard] = useState<number[][]>(initializeBoard());
     const [isPlayer1Turn, setPlayer1Turn] = useState<boolean>(true);
     const [allowToMove, setAllowToMove] = useState<boolean>(true);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
-    const [currentPlayers, setCurrentPlayers] = useState<number>(1);
-    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
@@ -37,17 +34,15 @@ export default function Play(props : Props) : JSX.Element
             return;
         }
         
-        props.socket.connect();
-
         // set the current user to their username
         // if no username was provided, default to guest
         setUsername(getRoomId() || 'Guest');
 
-        // get the total amount of players
-        getCurrentPlayers().then(currentPlayers => {
-            setCurrentPlayers(currentPlayers);
-            setLoading(false);
-        })
+        window.addEventListener('beforeunload', () => {            
+            sessionStorage.removeItem('roomId');
+        });
+
+        props.socket.connect();   
 
         props.socket.on("connect", () => {
             console.log(`connected with id ${props.socket.id}`);
@@ -55,11 +50,8 @@ export default function Play(props : Props) : JSX.Element
         });
 
         props.socket.on("joinedRoom", (username) => {
-            getCurrentPlayers().then(currentPlayers => {
-                console.log(`${username} has joined your room`);
-                setCurrentPlayers(currentPlayers)
-            }).catch(err => console.log(err));
-        })
+            console.log(`${username} has joined your room`);
+        });
 
         props.socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);   
@@ -77,18 +69,10 @@ export default function Play(props : Props) : JSX.Element
         });
 
         props.socket.on("playerLeft", () => {
+            props.socket.disconnect();
             console.log("The player left!");
         });
-        
-        window.addEventListener('beforeunload', () => {            
-            sessionStorage.removeItem('roomId');
-        });
 
-        window.onhashchange = () => {
-            console.log("Hash changed");
-        }
-
-        
     }, [currentBoard, props.socket]);
     
     /**
@@ -98,9 +82,6 @@ export default function Play(props : Props) : JSX.Element
      */
     async function onPlayerMove(col : number)
     {
-        if(currentPlayers < 2) {
-            return;
-        }
         
         if(!allowToMove) return;
 
@@ -132,10 +113,6 @@ export default function Play(props : Props) : JSX.Element
             setWinnerFound(true);
             setAllowToMove(false);
         }
-    }
-
-    if(loading) {
-        return <div>Loading...</div>
     }
 
     return (

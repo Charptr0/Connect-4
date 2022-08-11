@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import {v4 as uuid } from "uuid";
 import { getRoomId, Page } from "../../Utils";
+import { getCurrentPlayers } from "../Play/Utils";
 
 interface Props {
     switchPage : Function;
@@ -54,7 +55,15 @@ export default function Home(props : Props) : JSX.Element
         sessionStorage.setItem("roomId", roomId);
         sessionStorage.setItem("username", username);
 
-        props.switchPage(Page.PlayOnline);
+        getCurrentPlayers().then(totalPlayers => {
+            if(totalPlayers < 2) {
+                props.switchPage(Page.PlayOnline);
+            }
+
+            else {
+                console.log('room full');
+            }
+        })
     }
 
     return (
