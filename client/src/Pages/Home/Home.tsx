@@ -69,7 +69,16 @@ export default function Home(props : Props) : JSX.Element
 
     return (
     <>
-        <Modal />
+        <Modal
+            title="Success!"
+            desc="My Description"
+            btnPrimaryText="Ok"
+            btnSecondaryText="Cancel"
+            btnPrimaryOnClick={() => console.log('yo')
+            }
+            btnSecondaryOnClick={() => console.log('yo')
+            }
+         />
         <div>Home</div>
         <form>
             <label>Username</label><br></br>
