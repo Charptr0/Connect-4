@@ -1,0 +1,27 @@
+$box-width: 1000px;
+$box-height: 300px;
+
+.modal {
+    position: absolute;
+    width: $box-width;
+    height: $box-height;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+}
+
+.content {
+    margin-left: 50px;
+}
+
+.title {
+    @extend .content;
+    margin-top: 50px;
+    font-size: 50px;
+}
+
+.desc {
+    @extend .content;
+    font-size: 20px;
+}

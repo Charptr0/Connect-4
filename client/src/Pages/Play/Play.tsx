@@ -12,6 +12,7 @@ import {
     getRoomId, 
     getUsername
 } from '../../Utils';
+import Modal from "../../Components/Modal/Modal";
 
 interface Props {
     socket: Socket;

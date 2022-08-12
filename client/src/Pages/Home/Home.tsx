@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import {v4 as uuid } from "uuid";
+import Modal from "../../Components/Modal/Modal";
 import { getRoomId, Page } from "../../Utils";
 import { getCurrentPlayers } from "../Play/Utils";
 
@@ -68,6 +69,7 @@ export default function Home(props : Props) : JSX.Element
 
     return (
     <>
+        <Modal />
         <div>Home</div>
         <form>
             <label>Username</label><br></br>
