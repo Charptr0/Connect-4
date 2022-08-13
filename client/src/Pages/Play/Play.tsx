@@ -12,7 +12,7 @@ import {
     getRoomId, 
     getUsername
 } from '../../Utils';
-import Modal from "../../Components/Modal/Modal";
+import NotificationModal from "../../Components/NotificationModal/NotificationModal";
 
 interface Props {
     socket: Socket;
@@ -29,6 +29,7 @@ export default function Play(props : Props) : JSX.Element
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
     const [totalPlayers, setTotalPlayers] = useState<number>(1);
+    const [notificationText, setNotificationText] = useState<string>('');
     
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
@@ -46,13 +47,14 @@ export default function Play(props : Props) : JSX.Element
         });
 
         // open socket connection
+        if(props.socket.connected)
+            return;
+        
         props.socket.connect();
 
         // on open listener
         props.socket.on("connect", async () => {
-            console.log(`connected with id ${props.socket.id}`);
             props.socket.emit("joinRoom", getRoomId(), getUsername());
-
             setTotalPlayers(await getCurrentPlayers());
         });
 
@@ -60,6 +62,8 @@ export default function Play(props : Props) : JSX.Element
         props.socket.on("joinedRoom", async (username) => {
             setTotalPlayers(await getCurrentPlayers());
             console.log(`${username} has joined your room`);
+            setNotificationText(`${username} has joined your room`);
+            setTimeout(() => {setNotificationText('')}, 4000);
         });
 
         // listener when a user make a move
@@ -81,8 +85,10 @@ export default function Play(props : Props) : JSX.Element
         // listener when a user disconnect from the room
         props.socket.on("playerLeft", async () => {
             props.socket.disconnect();
+            
             setTotalPlayers(await getCurrentPlayers());
-            console.log("The player left!");
+            setNotificationText("The user left the room");
+            setTimeout(() => {setNotificationText('')}, 4000);
         });
 
     }, [currentBoard, props.socket]);
@@ -128,6 +134,7 @@ export default function Play(props : Props) : JSX.Element
 
     return (
         <>
+            {notificationText && <NotificationModal text={notificationText}/>}
             <div>Hello, {username}</div>
             {winnerFound && <div>A winner has been found</div>}
             {!allowToMove && !winnerFound && <div>Waiting for your opponent...</div>}

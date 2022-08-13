@@ -81,7 +81,6 @@ export default function Home(props : Props) : JSX.Element
             }
          /> */}
 
-        <NotificationModal text="User joined" />
         <div>Home</div>
         <form>
             <label>Username</label><br></br>
