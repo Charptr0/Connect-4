@@ -1,10 +1,10 @@
-.fade {
-    animation-name: fadeIn;
+.fadeIn {
+    animation-name: fadeInAnimation;
     animation-duration: 1s;
     animation-iteration-count: 1;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInAnimation {
     0% {
         opacity: 0%;
     }

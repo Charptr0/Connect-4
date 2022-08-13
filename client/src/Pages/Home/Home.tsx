@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import {v4 as uuid } from "uuid";
 import Modal from "../../Components/Modal/Modal";
+import NotificationModal from "../../Components/NotificationModal/NotificationModal";
 import { getRoomId, Page } from "../../Utils";
 import { getCurrentPlayers } from "../Play/Utils";
 
@@ -69,7 +70,7 @@ export default function Home(props : Props) : JSX.Element
 
     return (
     <>
-        <Modal
+        {/* <Modal
             title="Success!"
             desc="My Description"
             btnPrimaryText="Ok"
@@ -78,7 +79,9 @@ export default function Home(props : Props) : JSX.Element
             }
             btnSecondaryOnClick={() => console.log('yo')
             }
-         />
+         /> */}
+
+        <NotificationModal text="User joined" />
         <div>Home</div>
         <form>
             <label>Username</label><br></br>

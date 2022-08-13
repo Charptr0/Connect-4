@@ -6,7 +6,7 @@
 }
 
 .modal {
-    @extend .fade;
+    @extend .fadeIn;
     position: absolute;
     width: var(--box-width);
     height: var(--box-height);
@@ -41,7 +41,7 @@
 
         &:hover {
             transition: 0.5s;
-            background-color: rgb(32, 32, 245);
+            background-color: rgb(42, 42, 255);
         }
     }
 

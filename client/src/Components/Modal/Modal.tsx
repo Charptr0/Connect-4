@@ -31,7 +31,6 @@ interface Props {
  */
 export default function Modal(props : Props) 
 {
-
     return (
         <Backdrop>
             <div className={styles.modal}>
