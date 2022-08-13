@@ -49,16 +49,14 @@ export default function Play(props : Props) : JSX.Element
             sessionStorage.removeItem('roomId');
             props.socket.disconnect();
         });
-
-        // open socket connection
-        if(props.socket.connected)
-            return;
         
         props.socket.connect();
 
         // on open listener
         props.socket.on("connect", async () => {
             props.socket.emit("joinRoom", getRoomId(), getUsername());
+            console.log(`${props.socket.id}`);
+            
             setTotalPlayers(await getCurrentPlayers());
         });
 

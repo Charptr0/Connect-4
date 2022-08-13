@@ -1,6 +1,10 @@
 const app = require("express")();
 const server = require("http").Server(app);
-const cors = require("cors")
+const cors = require("cors");
+const { 
+    removePlayerFromRoom,
+    addPlayerToRoom,
+    getUserFromRoom } = require("./activeRooms");
 require("dotenv").config();
 const io = require("socket.io")(server, {
     cors : {
@@ -10,7 +14,7 @@ const io = require("socket.io")(server, {
 
 app.use(cors({
     origin : [process.env.FRONTEND_HOST]
-}))
+}));
 
 const port = process.env.PORT || 4000;
 
@@ -21,16 +25,16 @@ const port = process.env.PORT || 4000;
  */
 function getCurrentRoomSize(roomId) {
     const room = io.sockets.adapter.rooms.get(roomId);
-
     return room ? room.size : 0;
 }
-
 
 io.on("connection", socket => {
     socket.on("joinRoom", (roomId, username) => {
         console.log(`Joining room ${roomId}`);
 
         socket.join(roomId);
+        addPlayerToRoom(socket.id, roomId);
+
         socket.to(roomId).emit("joinedRoom", username);
     });
 
@@ -40,10 +44,12 @@ io.on("connection", socket => {
     });
 
     socket.on('disconnect', () => {
-        socket.adapter.rooms.forEach((val, key) => {
-            socket.to(key).emit("playerLeft");
-        })
+        const currentRoom = getUserFromRoom(socket.id);
 
+        socket.to(currentRoom).emit('playerLeft');
+        socket.leave(currentRoom);
+
+        removePlayerFromRoom(socket.id);
         socket.disconnect();
     });
     
