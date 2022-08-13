@@ -1,0 +1,31 @@
+@use "../../Styles/Animations/dropdown";
+@use "../../Styles/Animations/fadeOut";
+
+.modal {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    border-radius: 100px;
+    width: 500px;
+    background-color: lightskyblue;
+    text-align: center;
+}
+
+.appear {
+    @extend .dropdown;
+    display: block;
+}
+
+.disappear {
+    @extend .fadeOut;
+}
+
+.gone {
+    display: none;
+}
+
+@media screen and (max-width: 540px) {
+    .modal {
+        width: 300px;
+    }
+}

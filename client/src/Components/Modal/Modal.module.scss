@@ -1,0 +1,97 @@
+@use "../../Styles/Animations/fadeIn";
+
+:root {
+    --box-width: 700px;
+    --box-height: 300px;
+}
+
+.modal {
+    @extend .fadeIn;
+    position: absolute;
+    width: var(--box-width);
+    height: var(--box-height);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+}
+
+.content {
+    margin-left: 50px;
+}
+
+.btnContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 30px;
+
+    button {
+        margin-right: 20px;
+        height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: white;
+        border: 2px solid black;
+    }
+
+    .btnPrimary {
+        width: 200px;
+        background-color: navy;
+        color: white;
+
+        &:hover {
+            transition: 0.5s;
+            background-color: rgb(42, 42, 255);
+        }
+    }
+
+    .btnSecondary {
+        width: 150px;
+    }
+}
+
+.title {
+    @extend .content;
+    margin-top: 50px;
+    font-size: 50px;
+}
+
+.desc {
+    @extend .content;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+
+@media screen and (max-width: 1030px) {
+    :root {
+        --box-width: 700px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    :root {
+        --box-width: 500px;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    :root {
+        --box-width: 300px;
+    }
+
+    .btnContainer {
+        margin: 0;
+
+        .btnPrimary {
+            width: 120px;
+        }
+
+        .btnSecondary {
+            width: 80px;
+        }
+    }
+
+    .content {
+        margin-left: 30px;
+    }
+}
