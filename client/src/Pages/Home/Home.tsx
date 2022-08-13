@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {v4 as uuid } from "uuid";
 import Modal from "../../Components/Modal/Modal";
-import NotificationModal from "../../Components/NotificationModal/NotificationModal";
 import { getRoomId, Page } from "../../Utils";
 import { getCurrentPlayers } from "../Play/Utils";
 
@@ -15,14 +14,7 @@ export default function Home(props : Props) : JSX.Element
 {
     const usernameRef = useRef<HTMLInputElement>(null);
     const roomRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if(getRoomId()) {
-            window.location.reload();
-        }
-    
-    }, []);
-    
+    const [modal, setModal] = useState<Boolean>(false);  
 
     /**
      * Create a new room
@@ -47,7 +39,7 @@ export default function Home(props : Props) : JSX.Element
     /**
      * Join an existing room 
      */
-    function joinRoomHandler(event : React.SyntheticEvent) {
+    async function joinRoomHandler(event : React.SyntheticEvent) {
         event.preventDefault();
         
         // grab username and room id
@@ -57,30 +49,29 @@ export default function Home(props : Props) : JSX.Element
         sessionStorage.setItem("roomId", roomId);
         sessionStorage.setItem("username", username);
 
-        getCurrentPlayers().then(totalPlayers => {
-            if(totalPlayers < 2) {
-                props.switchPage(Page.PlayOnline);
-            }
+        const totalPlayers = await getCurrentPlayers();
 
-            else {
-                console.log('room full');
-            }
-        })
+        if(totalPlayers < 2) {
+            props.switchPage(Page.PlayOnline);
+        }
+
+        else {
+            setModal(true);
+            sessionStorage.removeItem('roomId');
+        }
+    
     }
 
     return (
     <>
-        {/* <Modal
-            title="Success!"
-            desc="My Description"
+        {modal && <Modal
+            title="Error"
+            desc="The room is full"
             btnPrimaryText="Ok"
-            btnSecondaryText="Cancel"
-            btnPrimaryOnClick={() => console.log('yo')
-            }
-            btnSecondaryOnClick={() => console.log('yo')
-            }
-         /> */}
-
+            btnSecondaryText="Close"
+            btnPrimaryOnClick={() => setModal(false)}
+            btnSecondaryOnClick={() => setModal(false)} />}
+            
         <div>Home</div>
         <form>
             <label>Username</label><br></br>

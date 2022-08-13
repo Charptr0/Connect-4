@@ -1,7 +1,7 @@
 @use "../../Styles/Animations/fadeIn";
 
 :root {
-    --box-width: 1000px;
+    --box-width: 700px;
     --box-height: 300px;
 }
 
@@ -58,7 +58,7 @@
 
 .desc {
     @extend .content;
-    font-size: 20px;
+    font-size: 25px;
     margin-bottom: 50px;
 }
 

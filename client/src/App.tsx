@@ -14,7 +14,7 @@ function App() {
   return (
   <>
     {page === Page.Home && <Home switchPage={switchPage} />}
-    {page === Page.PlayOnline && <Play socket={socket} />}
+    {page === Page.PlayOnline && <Play socket={socket} switchPage={switchPage} />}
   </>
   );
 }

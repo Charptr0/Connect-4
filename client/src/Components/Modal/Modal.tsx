@@ -6,8 +6,8 @@ interface Props {
     desc : string;
     btnPrimaryText : string;
     btnSecondaryText : string;
-    btnPrimaryOnClick : Function;
-    btnSecondaryOnClick : Function;
+    btnPrimaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
+    btnSecondaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
 }
 
 /**
@@ -38,8 +38,8 @@ export default function Modal(props : Props)
                 <p className={styles.desc}>{props.desc}</p>
 
                 <div className={styles.btnContainer}>
-                    <button className={styles.btnSecondary}>{props.btnSecondaryText}</button>
-                    <button className={styles.btnPrimary}>{props.btnPrimaryText}</button>
+                    <button className={styles.btnSecondary} onClick={props.btnSecondaryOnClick}>{props.btnSecondaryText}</button>
+                    <button className={styles.btnPrimary} onClick={props.btnPrimaryOnClick}>{props.btnPrimaryText}</button>
                 </div>
             </div>
         </Backdrop>
