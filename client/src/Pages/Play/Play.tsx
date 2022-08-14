@@ -40,7 +40,6 @@ export default function Play(props : Props) : JSX.Element
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
     const [totalPlayers, setTotalPlayers] = useState<number>(1);
-    const [notificationText, setNotificationText] = useState<string>('');
     const [modal, setModal] = useState<ModalInterface | null>();
 
     useEffect(() => { 
@@ -63,16 +62,13 @@ export default function Play(props : Props) : JSX.Element
         // on open listener
         props.socket.on("connect", async () => {
             props.socket.emit("joinRoom", getRoomId(), getUsername());
-            console.log(`${props.socket.id}`);
-            
             setTotalPlayers(await getCurrentPlayers());
+            // setNotificationText(`Waiting for another player to join this room...`);
         });
 
         // listener when a another user joined the room
         props.socket.on("joinedRoom", async (username) => {
             setTotalPlayers(await getCurrentPlayers());
-            setNotificationText(`${username} has joined your room`);
-            setTimeout(() => {setNotificationText('')}, 4000);
         });
 
         // listener when a user make a move
@@ -160,11 +156,11 @@ export default function Play(props : Props) : JSX.Element
                 btnPrimaryOnClick={modal.btnPrimaryOnClick}
                 btnSecondaryOnClick={modal.btnSecondaryOnClick}
             />}
-                
-            {notificationText && <NotificationModal text={notificationText}/>}
+            
+            {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
             <div>Hello, {username}</div>
             {winnerFound && <div>A winner has been found</div>}
-            {totalPlayers < 2 || (!allowToMove && !winnerFound) ? <div>Waiting for your opponent...</div> : null}
+            {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
             <div className={styles.flexContainer}>
                 <Board 
                     board={currentBoard}  
