@@ -1,0 +1,24 @@
+.navbar {
+    z-index: 1;
+
+    a {
+        text-decoration: none;
+    }
+
+    .navbarButton {
+        display: block;
+        margin: 30px;
+        font-size: 25px;
+        background-color: transparent;
+        color: white;
+        border-radius: 50px;
+        cursor: pointer;
+        padding: 10px;
+        width: 180px;
+        
+        &:hover {
+            transition: 0.5s;
+            border: 2px solid white;
+        }
+    }
+}

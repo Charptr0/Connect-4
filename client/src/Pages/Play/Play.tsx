@@ -63,7 +63,6 @@ export default function Play(props : Props) : JSX.Element
         props.socket.on("connect", async () => {
             props.socket.emit("joinRoom", getRoomId(), getUsername());
             setTotalPlayers(await getCurrentPlayers());
-            // setNotificationText(`Waiting for another player to join this room...`);
         });
 
         // listener when a another user joined the room
@@ -104,7 +103,6 @@ export default function Play(props : Props) : JSX.Element
                 btnSecondaryOnClick : () => setModal(null),
             });
         });
-
     }, [currentBoard, props.socket]);
     
     /**
@@ -156,7 +154,6 @@ export default function Play(props : Props) : JSX.Element
                 btnPrimaryOnClick={modal.btnPrimaryOnClick}
                 btnSecondaryOnClick={modal.btnSecondaryOnClick}
             />}
-            
             {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
             <div>Hello, {username}</div>
             {winnerFound && <div>A winner has been found</div>}

@@ -3,6 +3,7 @@ import {v4 as uuid } from "uuid";
 import Modal from "../../Components/Modal/Modal";
 import { getUsername, Page, removeRoomId } from "../../Utils";
 import { getCurrentPlayers } from "../Play/Utils";
+import Overview from "./Components/Overview/Overview";
 
 interface Props {
     switchPage : Function;
@@ -93,7 +94,7 @@ export default function Home(props : Props) : JSX.Element
             btnSecondaryOnClick={modal.btnSecondaryOnClick} 
         />}
             
-        <div>Home</div>
+        <Overview />
         <form>
             <label>Username</label><br></br>
             <input type="text" ref={usernameRef} defaultValue={getUsername() || ''}  /><br></br>
