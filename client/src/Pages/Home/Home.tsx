@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {v4 as uuid } from "uuid";
 import Modal from "../../Components/Modal/Modal";
 import { getUsername, Page, removeRoomId } from "../../Utils";
@@ -25,6 +25,10 @@ export default function Home(props : Props) : JSX.Element
     const roomRef = useRef<HTMLInputElement>(null);
     const [modal, setModal] = useState<ModalInterface | null>();  
 
+    useEffect(() => {
+        removeRoomId();
+    }, []);
+    
     /**
      * Create a new room
      */

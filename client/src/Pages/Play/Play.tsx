@@ -11,7 +11,6 @@ import {
 import {
     getRoomId, 
     getUsername,
-    Page
 } from '../../Utils';
 import NotificationModal from "../../Components/NotificationModal/NotificationModal";
 import Modal from "../../Components/Modal/Modal";
@@ -19,6 +18,15 @@ import Modal from "../../Components/Modal/Modal";
 interface Props {
     socket: Socket;
     switchPage : Function;
+}
+
+interface ModalInterface {
+    title : string;
+    desc : string;
+    btnPrimaryText : string;
+    btnSecondaryText : string;
+    btnPrimaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
+    btnSecondaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
 }
 
 /**
@@ -33,11 +41,11 @@ export default function Play(props : Props) : JSX.Element
     const [username, setUsername] = useState<string>('');
     const [totalPlayers, setTotalPlayers] = useState<number>(1);
     const [notificationText, setNotificationText] = useState<string>('');
-    const [modal, setModal] = useState<boolean>(false);
+    const [modal, setModal] = useState<ModalInterface | null>();
 
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
-        if(!sessionStorage.getItem('roomId')) {
+        if(!getRoomId()) {
             return;
         }
         
@@ -88,8 +96,17 @@ export default function Play(props : Props) : JSX.Element
             props.socket.disconnect();
             
             setTotalPlayers(await getCurrentPlayers());
-            setModal(true);
-
+            setModal({
+                title: "Heads Up!",
+                desc : "The other player have disconnected from the room.",
+                btnPrimaryText: "Leave Room",
+                btnSecondaryText: "Close",
+                btnPrimaryOnClick : () => {
+                    setModal(null);
+                    window.location.reload();
+                },
+                btnSecondaryOnClick : () => setModal(null),
+            });
         });
 
     }, [currentBoard, props.socket]);
@@ -136,23 +153,24 @@ export default function Play(props : Props) : JSX.Element
     return (
         <>
             {modal && <Modal 
-                title="Heads Up"
-                desc="The other player left the room"
-                btnPrimaryText="Leave the room"
-                btnSecondaryText="Close"
-                btnPrimaryOnClick={() => {props.switchPage(Page.Home); setModal(false);}}
-                btnSecondaryOnClick={() => setModal(false)}
+                title={modal.title}
+                desc={modal.desc}
+                btnPrimaryText={modal.btnPrimaryText}
+                btnSecondaryText={modal.btnSecondaryText}
+                btnPrimaryOnClick={modal.btnPrimaryOnClick}
+                btnSecondaryOnClick={modal.btnSecondaryOnClick}
             />}
                 
             {notificationText && <NotificationModal text={notificationText}/>}
             <div>Hello, {username}</div>
             {winnerFound && <div>A winner has been found</div>}
-            {!allowToMove && !winnerFound && <div>Waiting for your opponent...</div>}
+            {totalPlayers < 2 || (!allowToMove && !winnerFound) ? <div>Waiting for your opponent...</div> : null}
             <div className={styles.flexContainer}>
                 <Board 
                     board={currentBoard}  
                     isPlayer1Turn={isPlayer1Turn} 
-                    onPlayerMoveHandler={onPlayerMove}/>
+                    onPlayerMoveHandler={onPlayerMove}
+                />
             </div>
         </>
     )
