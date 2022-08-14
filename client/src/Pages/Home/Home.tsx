@@ -1,11 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {v4 as uuid } from "uuid";
 import Modal from "../../Components/Modal/Modal";
-import { getRoomId, Page } from "../../Utils";
+import { getUsername, Page, removeRoomId } from "../../Utils";
 import { getCurrentPlayers } from "../Play/Utils";
 
 interface Props {
     switchPage : Function;
+}
+
+interface ModalInterface {
+    title : string;
+    desc : string;
+    btnPrimaryText : string;
+    btnSecondaryText : string;
+    btnPrimaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
+    btnSecondaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
 }
 /**
  * Render the front page 
@@ -14,7 +23,7 @@ export default function Home(props : Props) : JSX.Element
 {
     const usernameRef = useRef<HTMLInputElement>(null);
     const roomRef = useRef<HTMLInputElement>(null);
-    const [modal, setModal] = useState<Boolean>(false);  
+    const [modal, setModal] = useState<ModalInterface | null>();  
 
     /**
      * Create a new room
@@ -22,12 +31,12 @@ export default function Home(props : Props) : JSX.Element
     function createRoomHandler(event : React.SyntheticEvent) {
         event.preventDefault();
 
+        // create a new room
+        const roomId = uuid().toUpperCase().slice(0, 8);
+        
         // grab username
         const username = usernameRef.current?.value || 'Guest';
 
-        // create a new room
-        const roomId = uuid().toUpperCase().slice(0, 8);
-    
         // save to session storage
         sessionStorage.setItem("roomId", roomId);
         sessionStorage.setItem("username", username);
@@ -56,26 +65,34 @@ export default function Home(props : Props) : JSX.Element
         }
 
         else {
-            setModal(true);
-            sessionStorage.removeItem('roomId');
+            setModal({
+                title: 'Error!',
+                desc : "The room is full.",
+                btnPrimaryText: "Ok",
+                btnSecondaryText: "Cancel",
+                btnPrimaryOnClick: () => setModal(null),
+                btnSecondaryOnClick: () => setModal(null),
+            });
+
+            removeRoomId();
         }
-    
     }
 
     return (
     <>
         {modal && <Modal
-            title="Error"
-            desc="The room is full"
-            btnPrimaryText="Ok"
-            btnSecondaryText="Close"
-            btnPrimaryOnClick={() => setModal(false)}
-            btnSecondaryOnClick={() => setModal(false)} />}
+            title={modal.title}
+            desc={modal.desc}
+            btnPrimaryText={modal.btnPrimaryText}
+            btnSecondaryText={modal.btnSecondaryText}
+            btnPrimaryOnClick={modal.btnPrimaryOnClick}
+            btnSecondaryOnClick={modal.btnSecondaryOnClick} 
+        />}
             
         <div>Home</div>
         <form>
             <label>Username</label><br></br>
-            <input type="text" ref={usernameRef} defaultValue={sessionStorage.getItem("username") || ''}  /><br></br>
+            <input type="text" ref={usernameRef} defaultValue={getUsername() || ''}  /><br></br>
 
             <label>Room</label><br></br>
             <input type="text" ref={roomRef}/><br></br>
