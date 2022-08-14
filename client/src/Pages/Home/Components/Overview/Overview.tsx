@@ -1,5 +1,4 @@
 import BoardDesign from "../BoardDesign/BoardDesign";
-import Navbar from "../Navbar/Navbar";
 import styles from "./Overview.module.scss";
 
 export default function Overview() 
@@ -10,12 +9,9 @@ export default function Overview()
             <button className={styles.playButton}>Play Online with Friends</button>
             <button className={styles.playButton}>Play Local Co-Op</button>
 
-            <Navbar />
             <div className={styles.container}>
                 <BoardDesign />
             </div>
-            
-
         </div>
     )
 }

@@ -3,6 +3,7 @@ import {v4 as uuid } from "uuid";
 import Modal from "../../Components/Modal/Modal";
 import { getUsername, Page, removeRoomId } from "../../Utils";
 import { getCurrentPlayers } from "../Play/Utils";
+import Footer from "./Components/Footer/Footer";
 import Overview from "./Components/Overview/Overview";
 
 interface Props {
@@ -105,5 +106,7 @@ export default function Home(props : Props) : JSX.Element
             <button onClick={(e : React.SyntheticEvent) => createRoomHandler(e)}>Create Room</button>
             <button onClick={(e : React.SyntheticEvent) => joinRoomHandler(e)}>Join Room</button>
         </form>
+
+        <Footer />
     </>)
 }

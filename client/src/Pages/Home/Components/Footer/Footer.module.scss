@@ -1,16 +1,16 @@
-.navbar {
-    z-index: 1;
+@use "../../../../Styles/Containers/flexCenter";
+
+.footer {
+    @extend .flexContainerCenter;
+    background-color: rgb(77, 77, 77);
 
     a {
         text-decoration: none;
     }
 
     .navbarButton {
-        display: block;
         margin: 30px;
         font-size: 25px;
-        background-color: transparent;
-        color: white;
         border-radius: 50px;
         cursor: pointer;
         padding: 10px;
