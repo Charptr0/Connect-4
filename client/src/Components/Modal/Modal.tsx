@@ -1,7 +1,7 @@
 import Backdrop from "../Backdrop/Backdrop"
 import styles from "./Modal.module.scss";
 
-interface Props {
+export interface Props {
     title : string;
     desc : string;
     btnPrimaryText : string;
