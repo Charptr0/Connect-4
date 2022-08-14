@@ -1,4 +1,5 @@
 @use "../../../../Styles/Containers/flexCenter";
+@use "../../../../Styles/Animations/fadeIn";
 
 :root {
     --title-size: 100px;
@@ -13,6 +14,7 @@
     color: white;
 
     .playButton {
+        @extend .fadeIn;
         width: 250px;
         height: 50px;
         margin: 20px;
@@ -33,14 +35,9 @@
 }
 
 .title {
+    @extend .fadeIn;
     font-size: var(--title-size);
     z-index: 1;
-}
-
-.desc {
-    font-size: var(--desc-size);
-    margin-left: 15%;
-    margin-right: 15%;
 }
 
 .container {

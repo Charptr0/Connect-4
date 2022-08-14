@@ -107,6 +107,6 @@ export default function Home(props : Props) : JSX.Element
             <button onClick={(e : React.SyntheticEvent) => joinRoomHandler(e)}>Join Room</button>
         </form>
 
-        <Footer />
+        {/* <Footer /> */}
     </>)
 }
