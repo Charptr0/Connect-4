@@ -7,7 +7,7 @@
 
 .modal {
     @extend .fadeIn;
-    position: absolute;
+    position: fixed;
     width: var(--box-width);
     height: var(--box-height);
     top: 50%;
