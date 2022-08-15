@@ -4,7 +4,8 @@ const cors = require("cors");
 const { 
     removePlayerFromRoom,
     addPlayerToRoom,
-    getUserFromRoom } = require("./activeRooms");
+    getUserFromRoom, 
+    roomExists} = require("./activeRooms");
 require("dotenv").config();
 const io = require("socket.io")(server, {
     cors : {
@@ -73,6 +74,17 @@ app.get("/get-room-size/:roomId", (req, res) => {
 app.get("/status", (req, res) => {
     res.send();
 });
+
+app.get("/room-exist/:roomId", (req, res) => {
+    const roomId = req.params.roomId;
+
+    if(!roomExists(roomId)) {
+        res.status(404).send();
+    } else {
+        res.send();
+    }
+
+})
 
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);

@@ -16,8 +16,19 @@ function getUserFromRoom(playerId) {
     return activeRooms[playerId];
 }
 
+function roomExists(roomId) {
+    for(const room of Object.keys(activeRooms)) {
+        if(activeRooms[room] === roomId) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 module.exports = {
     addPlayerToRoom,
     removePlayerFromRoom,
     getUserFromRoom,
+    roomExists
 }

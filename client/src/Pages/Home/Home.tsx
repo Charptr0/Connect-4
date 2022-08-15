@@ -31,10 +31,6 @@ export default function Home(props : Props) : JSX.Element
     const [modal, setModal] = useState<ModalInterface | null>();  
     const [loading, setLoading] = useState<boolean>(true);
     const [isJoinRoomOption, setJoinRoomOption] = useState<boolean>(true);
-    const [selectedStyles, setSelectedStyles] = useState({
-        joinRoom: styles.selected,
-        createRoom: styles.selected,
-    })
 
     useEffect(() => {
         removeRoomId();
@@ -80,6 +76,22 @@ export default function Home(props : Props) : JSX.Element
         sessionStorage.setItem("roomId", roomId);
         sessionStorage.setItem("username", username);
 
+        try {
+            await axios.get(`http://localhost:4000/room-exist/${roomId}`);
+        } catch (err) {
+            setModal({
+                title: 'Error!',
+                desc : "The room does not exist :(",
+                btnPrimaryText: "Ok",
+                btnSecondaryText: "Cancel",
+                btnPrimaryOnClick: () => setModal(null),
+                btnSecondaryOnClick: () => setModal(null),
+            });
+
+            removeRoomId();
+            return;
+        }
+
         const totalPlayers = await getCurrentPlayers();
 
         if(totalPlayers < 2) {
@@ -89,7 +101,7 @@ export default function Home(props : Props) : JSX.Element
         else {
             setModal({
                 title: 'Error!',
-                desc : "The room is full.",
+                desc : "The room is full :(",
                 btnPrimaryText: "Ok",
                 btnSecondaryText: "Cancel",
                 btnPrimaryOnClick: () => setModal(null),
@@ -111,7 +123,8 @@ export default function Home(props : Props) : JSX.Element
     }
 
     return (
-    <>
+    <>      
+        <Overview scroll={scroll} />
         {modal && <Modal
             title={modal.title}
             desc={modal.desc}
@@ -120,8 +133,6 @@ export default function Home(props : Props) : JSX.Element
             btnPrimaryOnClick={modal.btnPrimaryOnClick}
             btnSecondaryOnClick={modal.btnSecondaryOnClick} 
         />}
-            
-        <Overview scroll={scroll} />
         <form className={styles.form}>
             <div className={styles.selection}>
                 <div onClick={() => setJoinRoomOption(true)} className={isJoinRoomOption ? styles.selected : styles.notSelected }>Create Room</div>
