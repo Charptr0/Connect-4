@@ -1,0 +1,55 @@
+@use "../../Styles/Containers/flexCenter";
+
+.form {
+    @extend .flexContainerCenter;
+    flex-direction: column;
+    text-align: center;
+    margin: 30px;
+
+    label {
+        font-size: 40px;
+    }
+
+    input {
+        text-align: center;
+        height: 30px;
+        font-size: 25px;
+        border-radius: 10px;
+        width: 300px;
+        margin: 5px;
+    }
+}
+
+.selection {
+    display: flex;
+    margin: 30px;
+    justify-content: space-evenly;
+    font-size: 30px;
+    border-radius: 20px;
+    border: 1px solid black;
+
+    div {
+        padding: 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        width: 200px;
+
+    }
+}
+
+.joinRoomBtn, .createRoomBtn {
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 2px;
+}
+
+.selected {
+    background-color: rgb(116, 165, 255);
+}
+
+.notSelected:hover {
+    transition: 0.5s;
+    background-color: rgb(202, 221, 255);
+}

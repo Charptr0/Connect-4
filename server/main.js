@@ -70,6 +70,10 @@ app.get("/get-room-size/:roomId", (req, res) => {
     });
 })
 
+app.get("/status", (req, res) => {
+    res.send();
+});
+
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });

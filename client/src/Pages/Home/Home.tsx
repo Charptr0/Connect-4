@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import styles from "./Home.module.scss";
 import {v4 as uuid } from "uuid";
 import Modal from "../../Components/Modal/Modal";
 import { getUsername, Page, removeRoomId } from "../../Utils";
@@ -25,10 +27,24 @@ export default function Home(props : Props) : JSX.Element
 {
     const usernameRef = useRef<HTMLInputElement>(null);
     const roomRef = useRef<HTMLInputElement>(null);
+
     const [modal, setModal] = useState<ModalInterface | null>();  
+    const [loading, setLoading] = useState<boolean>(true);
+    const [isJoinRoomOption, setJoinRoomOption] = useState<boolean>(true);
+    const [selectedStyles, setSelectedStyles] = useState({
+        joinRoom: styles.selected,
+        createRoom: styles.selected,
+    })
 
     useEffect(() => {
         removeRoomId();
+        axios.get("http://localhost:4000/status")
+            .then(() => {
+                setLoading(false);
+            }).catch((err) => {
+                if(err.message === 'Network Error') 
+                    console.log('Cannot connect to server, please try again later');
+            });
     }, []);
     
     /**
@@ -84,6 +100,16 @@ export default function Home(props : Props) : JSX.Element
         }
     }
 
+    function scroll() {
+        if(usernameRef.current) {
+            usernameRef.current.scrollIntoView({behavior: 'smooth'});
+        }
+    }
+
+    if(loading) {
+        return <div>Loading...</div>
+    }
+
     return (
     <>
         {modal && <Modal
@@ -95,18 +121,26 @@ export default function Home(props : Props) : JSX.Element
             btnSecondaryOnClick={modal.btnSecondaryOnClick} 
         />}
             
-        <Overview />
-        <form>
+        <Overview scroll={scroll} />
+        <form className={styles.form}>
+            <div className={styles.selection}>
+                <div onClick={() => setJoinRoomOption(true)} className={isJoinRoomOption ? styles.selected : styles.notSelected }>Create Room</div>
+                <div onClick={() => setJoinRoomOption(false)} className={!isJoinRoomOption ? styles.selected : styles.notSelected }>Join Room</div>
+            </div>
             <label>Username</label><br></br>
             <input type="text" ref={usernameRef} defaultValue={getUsername() || ''}  /><br></br>
 
-            <label>Room</label><br></br>
-            <input type="text" ref={roomRef}/><br></br>
-
-            <button onClick={(e : React.SyntheticEvent) => createRoomHandler(e)}>Create Room</button>
-            <button onClick={(e : React.SyntheticEvent) => joinRoomHandler(e)}>Join Room</button>
+            {!isJoinRoomOption ? 
+            <div>
+                <label>Room</label><br></br>
+                <input type="text" ref={roomRef}/><br></br>
+                <button 
+                    onClick={(e : React.SyntheticEvent) => joinRoomHandler(e)} 
+                    className={`${styles.joinRoomBtn}`}>Join Room</button>
+            </div> : <button 
+                onClick={(e : React.SyntheticEvent) => createRoomHandler(e)} 
+                className={`${styles.createRoomBtn}`}>Create Room</button>}
         </form>
-
-        {/* <Footer /> */}
+        <Footer />
     </>)
 }
