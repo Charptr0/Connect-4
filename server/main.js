@@ -4,8 +4,15 @@ const cors = require("cors");
 const { 
     removePlayerFromRoom,
     addPlayerToRoom,
-    getUserFromRoom, 
-    roomExists} = require("./activeRooms");
+    getAllUsersFromRoom, 
+    roomExists,
+    activeRooms
+} = require("./activeRooms");
+const {
+    addPlayerToDictionary,
+    getRoomFromDictionary,
+    removePlayerFromDictionary
+}  = require("./playerDictionary");
 require("dotenv").config();
 const io = require("socket.io")(server, {
     cors : {
@@ -30,30 +37,37 @@ function getCurrentRoomSize(roomId) {
 }
 
 io.on("connection", socket => {
+    // listener when a user joins the room
     socket.on("joinRoom", (roomId, username) => {
-        console.log(`Joining room ${roomId}`);
-
+        // join the room
         socket.join(roomId);
-        addPlayerToRoom(socket.id, roomId);
+        
+        // add the user to memory
+        addPlayerToRoom(socket.id, username, roomId);
+        addPlayerToDictionary(socket.id, roomId);
 
+        // send to frontend
         socket.to(roomId).emit("joinedRoom", username);
     });
 
     socket.on("playerLeft", roomId => {
         socket.to(roomId).emit("playerHasLeft");
-        console.log(`Someones left room ${roomId}`);
     });
 
+    // listener when a user leaves the room
     socket.on('disconnect', () => {
-        const currentRoom = getUserFromRoom(socket.id);
+        const currentRoom = getRoomFromDictionary(socket.id);
 
         socket.to(currentRoom).emit('playerLeft');
         socket.leave(currentRoom);
 
-        removePlayerFromRoom(socket.id);
+        removePlayerFromRoom(currentRoom, socket.id);
+        removePlayerFromDictionary(socket.id);
+
         socket.disconnect();
     });
     
+    // listener when a user make a move
     socket.on("playerMoved", (board, isPlayer1Turn, roomId) => {
         socket.to(roomId).emit("updateBoard", board, !isPlayer1Turn);
     });
@@ -85,6 +99,22 @@ app.get("/room-exist/:roomId", (req, res) => {
     }
 
 })
+
+app.get("/get-opponent/:roomId/:userId", (req, res) => {
+    const roomId = req.params.roomId;
+    const userId = req.params.userId;
+
+    if(!roomExists(roomId) || !userId) {
+        return res.status(404).send();
+    }
+
+    else {
+        const users = getAllUsersFromRoom(roomId);
+
+        const opponent = users.find(user => user.id !== userId);
+        return opponent ? res.json(opponent) : res.status(404).send();
+    }
+});
 
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);

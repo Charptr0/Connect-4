@@ -14,10 +14,12 @@ import {
 } from '../../Utils';
 import NotificationModal from "../../Components/NotificationModal/NotificationModal";
 import Modal from "../../Components/Modal/Modal";
+import axios from "axios";
 
 interface Props {
-    socket: Socket;
-    switchPage : Function;
+    socket: Socket,
+    switchPage : Function,
+    opponentName? : string
 }
 
 interface ModalInterface {
@@ -41,6 +43,7 @@ export default function Play(props : Props) : JSX.Element
     const [username, setUsername] = useState<string>('');
     const [totalPlayers, setTotalPlayers] = useState<number>(1);
     const [modal, setModal] = useState<ModalInterface | null>();
+    const [opponentName, setOpponentName] = useState<string>('???');
 
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
@@ -62,12 +65,24 @@ export default function Play(props : Props) : JSX.Element
         // on open listener
         props.socket.on("connect", async () => {
             props.socket.emit("joinRoom", getRoomId(), getUsername());
-            setTotalPlayers(await getCurrentPlayers());
+            const playerCount = await getCurrentPlayers();
+            setTotalPlayers(playerCount);
+
+            if(playerCount === 2) {
+                try {
+                    const res = await axios.get(`http://localhost:4000/get-opponent/${getRoomId()}/${getUsername()}`);
+                    setOpponentName(res.data.username || "NULL");
+                    
+                } catch (err) {
+                    console.log(err);
+                }
+            }
         });
 
         // listener when a another user joined the room
         props.socket.on("joinedRoom", async (username) => {
             setTotalPlayers(await getCurrentPlayers());
+            setOpponentName(username);
         });
 
         // listener when a user make a move
@@ -158,7 +173,7 @@ export default function Play(props : Props) : JSX.Element
 
                 setAllowToMove(false);
 
-                props.socket.emit("playerMoved", currentBoard, isPlayer1Turn, sessionStorage.getItem('roomId'));
+                props.socket.emit("playerMoved", currentBoard, isPlayer1Turn, getRoomId());
                 break;
             }
         }
@@ -215,7 +230,7 @@ export default function Play(props : Props) : JSX.Element
                 </div>
 
                 <div className={styles.rightContainer}>
-                    <h2>Your opponent: {username}</h2>
+                    <h2>Your opponent: {opponentName}</h2>
                 </div>
                 {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
                 {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
