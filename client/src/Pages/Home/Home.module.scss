@@ -38,8 +38,8 @@
 .joinRoomBtn, .createRoomBtn {
     padding: 10px;
     width: 300px;
-    font-size: 20px;
-    border-radius: 8px;
+    font-size: 24px;
+    border-radius: 10px;
     cursor: pointer;
     background-color: transparent;
     margin: 50px;
@@ -52,10 +52,5 @@
 }
 
 .selected {
-    background-color: rgb(116, 165, 255);
-}
-
-.notSelected:hover {
-    transition: 0.5s;
-    background-color: rgb(202, 221, 255);
+    background-color: rgb(25, 105, 255);
 }

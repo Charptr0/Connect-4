@@ -83,7 +83,7 @@ export default function Home(props : Props) : JSX.Element
                 title: 'Error!',
                 desc : "The room does not exist :(",
                 btnPrimaryText: "Ok",
-                btnSecondaryText: "Cancel",
+                btnSecondaryText: "Close",
                 btnPrimaryOnClick: () => setModal(null),
                 btnSecondaryOnClick: () => setModal(null),
             });
@@ -103,7 +103,7 @@ export default function Home(props : Props) : JSX.Element
                 title: 'Error!',
                 desc : "The room is full :(",
                 btnPrimaryText: "Ok",
-                btnSecondaryText: "Cancel",
+                btnSecondaryText: "Close",
                 btnPrimaryOnClick: () => setModal(null),
                 btnSecondaryOnClick: () => setModal(null),
             });
@@ -118,13 +118,23 @@ export default function Home(props : Props) : JSX.Element
         }
     }
 
+    function changeToJoinedRoom() {
+        scroll();
+        setJoinRoomOption(true);
+    }
+
+    function changeToCreatedRoom() {
+        scroll();
+        setJoinRoomOption(false);
+    }
+
     if(loading) {
         return <div>Loading...</div>
     }
 
     return (
     <>      
-        <Overview scroll={scroll} />
+        <Overview changeToJoinRoom={changeToJoinedRoom} changeToCreatedRoom={changeToCreatedRoom} />
         {modal && <Modal
             title={modal.title}
             desc={modal.desc}
