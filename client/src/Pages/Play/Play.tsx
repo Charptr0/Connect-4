@@ -76,6 +76,31 @@ export default function Play(props : Props) : JSX.Element
                      
             if(checkWinner(board) !== Cell.EMPTY) {
                 setWinnerFound(true);
+                if(isPlayer1Turn) {
+                    setModal({
+                        title: "A winner has been found!",
+                        desc : "You Win",
+                        btnPrimaryText: "Start a New Game",
+                        btnSecondaryText: "Leave Room",
+                        btnPrimaryOnClick : () => {
+                            setModal(null);
+                        },
+                        btnSecondaryOnClick : () => setModal(null),
+                    })
+                }
+    
+                else {
+                    setModal({
+                        title: "A winner has been found!",
+                        desc : "You Lose",
+                        btnPrimaryText: "Start a New Game",
+                        btnSecondaryText: "Leave Room",
+                        btnPrimaryOnClick : () => {
+                            setModal(null);
+                        },
+                        btnSecondaryOnClick : () => setModal(null),
+                    })
+                }
                 setAllowToMove(false);
             }
 
@@ -140,6 +165,31 @@ export default function Play(props : Props) : JSX.Element
         
         if(checkWinner(currentBoard) !== Cell.EMPTY) {
             setWinnerFound(true);
+            if(isPlayer1Turn) {
+                setModal({
+                    title: "A winner has been found!",
+                    desc : "You Win",
+                    btnPrimaryText: "Start a New Game",
+                    btnSecondaryText: "Leave Room",
+                    btnPrimaryOnClick : () => {
+                        setModal(null);
+                    },
+                    btnSecondaryOnClick : () => setModal(null),
+                })
+            }
+
+            else {
+                setModal({
+                    title: "A winner has been found!",
+                    desc : "You Lose",
+                    btnPrimaryText: "Start a New Game",
+                    btnSecondaryText: "Leave Room",
+                    btnPrimaryOnClick : () => {
+                        setModal(null);
+                    },
+                    btnSecondaryOnClick : () => setModal(null),
+                })
+            }
             setAllowToMove(false);
         }
     }
@@ -154,11 +204,15 @@ export default function Play(props : Props) : JSX.Element
                 btnPrimaryOnClick={modal.btnPrimaryOnClick}
                 btnSecondaryOnClick={modal.btnSecondaryOnClick}
             />}
-            {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
-            <div>Hello, {username}</div>
-            {winnerFound && <div>A winner has been found</div>}
-            {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
+
             <div className={styles.flexContainer}>
+                <div className={styles.container}>
+                    <h1>Connect 4</h1>
+                    <h2>Room Number: {getRoomId()}</h2>
+                </div>
+                {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
+                {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
+
                 <Board 
                     board={currentBoard}  
                     isPlayer1Turn={isPlayer1Turn} 
