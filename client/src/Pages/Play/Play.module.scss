@@ -5,7 +5,14 @@
     flex-direction: column;
 }
 
-.container {
+.leftContainer {
+    position: fixed;
+    align-self: flex-start;
+    top: 1%;
+    left: 1%;
+}
+
+.middleContainer {
     text-align: center;
     
     h1 {
@@ -16,4 +23,11 @@
     h2 {
         font-size: 30px;
     }
+}
+
+.rightContainer {
+    position: fixed;
+    align-self: flex-end;
+    top: 1%;
+    right: 1%;
 }

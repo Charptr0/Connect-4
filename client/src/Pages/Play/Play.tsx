@@ -50,7 +50,7 @@ export default function Play(props : Props) : JSX.Element
         
         // set the current user to their username
         // if no username was provided, default to guest
-        setUsername(getRoomId() || 'Guest');
+        setUsername(getUsername() || 'Guest');
 
         window.addEventListener('beforeunload', () => {            
             sessionStorage.removeItem('roomId');
@@ -206,9 +206,16 @@ export default function Play(props : Props) : JSX.Element
             />}
 
             <div className={styles.flexContainer}>
-                <div className={styles.container}>
+                <div className={styles.leftContainer}>
+                    <h2>You: {username}</h2>
+                </div>
+                <div className={styles.middleContainer}>
                     <h1>Connect 4</h1>
                     <h2>Room Number: {getRoomId()}</h2>
+                </div>
+
+                <div className={styles.rightContainer}>
+                    <h2>Your opponent: {username}</h2>
                 </div>
                 {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
                 {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}

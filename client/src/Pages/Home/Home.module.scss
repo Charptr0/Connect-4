@@ -54,3 +54,30 @@
 .selected {
     background-color: rgb(25, 105, 255);
 }
+
+@media screen and (max-width: 500px) {
+    .selection {
+        font-size: 20px;
+
+        div {
+            width: 120px;
+        }
+    }
+
+    .form {
+        label {
+            font-size: 25px;
+        }
+    
+        input {
+            width: 200px;
+        }
+
+    }
+
+    .joinRoomBtn, .createRoomBtn {
+        width: 180px;
+        font-size: 18px;
+    }
+    
+}
