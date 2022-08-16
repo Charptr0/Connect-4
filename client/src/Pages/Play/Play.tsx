@@ -44,6 +44,8 @@ export default function Play(props : Props) : JSX.Element
     const [totalPlayers, setTotalPlayers] = useState<number>(1);
     const [modal, setModal] = useState<ModalInterface | null>();
     const [opponentName, setOpponentName] = useState<string>('???');
+    const [userScore, setUserScore] = useState<number>(0);
+    const [opponentScore, setOpponentScore] = useState<number>(0);
 
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
@@ -64,6 +66,7 @@ export default function Play(props : Props) : JSX.Element
 
         // on open listener
         props.socket.on("connect", async () => {
+            console.log(`Signed in as ${props.socket.id}`);
             props.socket.emit("joinRoom", getRoomId(), getUsername());
             const playerCount = await getCurrentPlayers();
             setTotalPlayers(playerCount);
@@ -98,10 +101,15 @@ export default function Play(props : Props) : JSX.Element
                         btnPrimaryText: "Start a New Game",
                         btnSecondaryText: "Leave Room",
                         btnPrimaryOnClick : () => {
-                            setModal(null);
+                            reset();
                         },
-                        btnSecondaryOnClick : () => setModal(null),
+                        btnSecondaryOnClick : () => {
+                            setModal(null);
+                            window.location.reload();
+                        },
                     })
+
+                    setUserScore(userScore + 1);
                 }
     
                 else {
@@ -111,10 +119,15 @@ export default function Play(props : Props) : JSX.Element
                         btnPrimaryText: "Start a New Game",
                         btnSecondaryText: "Leave Room",
                         btnPrimaryOnClick : () => {
-                            setModal(null);
+                            reset();
                         },
-                        btnSecondaryOnClick : () => setModal(null),
+                        btnSecondaryOnClick : () => {
+                            setModal(null);
+                            window.location.reload();
+                        },
                     })
+
+                    setOpponentScore(opponentScore + 1);
                 }
                 setAllowToMove(false);
             }
@@ -143,7 +156,16 @@ export default function Play(props : Props) : JSX.Element
                 btnSecondaryOnClick : () => setModal(null),
             });
         });
-    }, [currentBoard, props.socket]);
+    }, [currentBoard, props.socket, userScore, opponentScore]);
+
+    function reset() {
+        setModal(null);
+        setCurrentBoard(initializeBoard());
+
+        setWinnerFound(false);
+        setPlayer1Turn(true);
+        setAllowToMove(true);
+    }
     
     /**
      * Update the board and send the request to the other player
@@ -156,7 +178,19 @@ export default function Play(props : Props) : JSX.Element
 
         // prevent the user from making a move when a column is full
         if(currentBoard[0][col] !== Cell.EMPTY) {
-            console.log("Invalid placement");
+            setModal({
+                title: "Error!",
+                desc : "Invalid Placement",
+                btnPrimaryText: "Ok",
+                btnSecondaryText: "Close",
+                btnPrimaryOnClick : () => {
+                    setModal(null);
+                },
+                btnSecondaryOnClick : () => {
+                    setModal(null);
+                },
+            });
+
             return;
         }
 
@@ -170,9 +204,7 @@ export default function Play(props : Props) : JSX.Element
                 // update board
                 isPlayer1Turn ? currentBoard[i][col] = Cell.PLAYER_1 : currentBoard[i][col] = Cell.PLAYER_2;
                 setCurrentBoard(currentBoard);
-
                 setAllowToMove(false);
-
                 props.socket.emit("playerMoved", currentBoard, isPlayer1Turn, getRoomId());
                 break;
             }
@@ -187,10 +219,15 @@ export default function Play(props : Props) : JSX.Element
                     btnPrimaryText: "Start a New Game",
                     btnSecondaryText: "Leave Room",
                     btnPrimaryOnClick : () => {
-                        setModal(null);
+                        reset();
                     },
-                    btnSecondaryOnClick : () => setModal(null),
+                    btnSecondaryOnClick : () => {
+                        setModal(null);
+                        window.location.reload();
+                    },
                 })
+
+                setUserScore(userScore + 1);
             }
 
             else {
@@ -200,10 +237,15 @@ export default function Play(props : Props) : JSX.Element
                     btnPrimaryText: "Start a New Game",
                     btnSecondaryText: "Leave Room",
                     btnPrimaryOnClick : () => {
-                        setModal(null);
+                        reset();
                     },
-                    btnSecondaryOnClick : () => setModal(null),
+                    btnSecondaryOnClick : () => {
+                        setModal(null);
+                        window.location.reload();
+                    },
                 })
+
+                setOpponentScore(opponentScore + 1);
             }
             setAllowToMove(false);
         }
@@ -223,6 +265,7 @@ export default function Play(props : Props) : JSX.Element
             <div className={styles.flexContainer}>
                 <div className={styles.leftContainer}>
                     <h2>You: {username}</h2>
+                    <h3 className={styles.score}>{userScore}</h3>
                 </div>
                 <div className={styles.middleContainer}>
                     <h1>Connect 4</h1>
@@ -231,6 +274,7 @@ export default function Play(props : Props) : JSX.Element
 
                 <div className={styles.rightContainer}>
                     <h2>Your opponent: {opponentName}</h2>
+                    <h3 className={styles.score}>{opponentScore}</h3>
                 </div>
                 {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
                 {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
