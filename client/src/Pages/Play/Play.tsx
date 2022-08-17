@@ -262,19 +262,12 @@ export default function Play(props : Props) : JSX.Element
             />}
 
             <div className={styles.flexContainer}>
-                <div className={styles.leftContainer}>
-                    <h2>You: {username}</h2>
-                    <h3 className={styles.score}>{userScore}</h3>
-                </div>
+
                 <div className={styles.middleContainer}>
                     <h1>Connect 4</h1>
                     <h2>Room Number: {getRoomId()}</h2>
                 </div>
 
-                <div className={styles.rightContainer}>
-                    <h2>Your opponent: {opponentName}</h2>
-                    <h3 className={styles.score}>{opponentScore}</h3>
-                </div>
                 {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
                 {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
 
@@ -283,6 +276,15 @@ export default function Play(props : Props) : JSX.Element
                     isPlayer1Turn={isPlayer1Turn} 
                     onPlayerMoveHandler={onPlayerMove}
                 />
+
+                <div className={styles.scoreContainer}>
+                    <h1>Current Scores</h1>
+                    <h2>You: {username}</h2>
+                    <h3>{userScore}</h3>
+
+                    <h2>Your opponent: {opponentName}</h2>
+                    <h3>{opponentScore}</h3>
+                </div>
             </div>
         </>
     )

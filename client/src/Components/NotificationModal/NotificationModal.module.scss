@@ -4,27 +4,34 @@
     @extend .fadeIn;
     position: absolute;
     left: 50%;
-    transform: translate(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 100px;
     width: 500px;
     background-color: lightskyblue;
     text-align: center;
     font-size: 15px;
-    z-index: 1;
+}
+
+@media screen and (max-width: 950px) {
+    .modal {
+        top: 30%;
+        font-size: 12px;
+    }
 }
 
 @media screen and (max-width: 600px) {
     .modal {
         top: 20%;
-        transform: translate(-50%, 100%);
-        font-size: 12px;
+        font-size: 10px;
         width: 300px;
     }
 }
 
 @media screen and (max-width: 360px) {
     .modal {
-        font-size: 10px;
-        transform: translate(-50%, 200%);
+        font-size: 8px;
+        width: 200px;
+
     }
 }
