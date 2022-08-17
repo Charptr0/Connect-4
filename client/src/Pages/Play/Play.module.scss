@@ -6,10 +6,11 @@
 }
 
 .leftContainer {
-    position: fixed;
+    position: absolute;
     align-self: flex-start;
-    top: 1%;
-    left: 1%;
+    margin: 10px;
+    top: 0px;
+    left: 0px;
 }
 
 .middleContainer {
@@ -26,12 +27,52 @@
 }
 
 .rightContainer {
-    position: fixed;
+    position: absolute;
     align-self: flex-end;
-    top: 1%;
-    right: 1%;
+    margin: 10px;
+    top: 0px;
+    right: 0px;
 }
 
 .score {
     text-align: center;
+    font-size: 30px;
+}
+
+@media screen and (max-width: 950px) {
+    .leftContainer, .rightContainer {
+        font-size: 12px;
+        bottom: 1px;
+    }
+
+    .middleContainer {
+        h1 {
+            font-size: 30px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+    }
+}
+
+@media screen and (max-width: 820px) {
+    .score {
+        font-size: 20px;
+        top: 40%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .leftContainer, .rightContainer {
+        font-size: 12px;
+        top: 40%;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .leftContainer, .rightContainer {
+        flex-direction: row;
+        background-color: red;
+    }
 }

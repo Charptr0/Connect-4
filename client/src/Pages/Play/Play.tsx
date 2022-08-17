@@ -244,7 +244,6 @@ export default function Play(props : Props) : JSX.Element
                         window.location.reload();
                     },
                 })
-
                 setOpponentScore(opponentScore + 1);
             }
             setAllowToMove(false);

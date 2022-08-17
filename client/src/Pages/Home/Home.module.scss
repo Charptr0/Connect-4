@@ -16,6 +16,7 @@
         border-radius: 10px;
         width: 300px;
         margin-top: 20px;
+        box-shadow: 2px 2px;
     }
 }
 
@@ -26,6 +27,7 @@
     font-size: 30px;
     border-radius: 20px;
     border: 1px solid black;
+    background-color: white;
 
     div {
         padding: 10px;
@@ -44,6 +46,7 @@
     background-color: transparent;
     margin: 50px;
     box-shadow: 5px 5px;
+    background-color: white;
 
     &:hover {
         transition: 1s;
