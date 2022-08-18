@@ -11,6 +11,7 @@ import {
 import {
     getRoomId, 
     getUsername,
+    removeRoomId,
 } from '../../Utils';
 import NotificationModal from "../../Components/NotificationModal/NotificationModal";
 import Modal from "../../Components/Modal/Modal";
@@ -58,7 +59,7 @@ export default function Play(props : Props) : JSX.Element
         setUsername(getUsername() || 'Guest');
 
         window.addEventListener('beforeunload', () => {            
-            sessionStorage.removeItem('roomId');
+            removeRoomId();
             props.socket.disconnect();
         });
         
@@ -66,7 +67,6 @@ export default function Play(props : Props) : JSX.Element
 
         // on open listener
         props.socket.on("connect", async () => {
-            console.log(`Signed in as ${props.socket.id}`);
             props.socket.emit("joinRoom", getRoomId(), getUsername());
             const playerCount = await getCurrentPlayers();
             setTotalPlayers(playerCount);
@@ -88,6 +88,11 @@ export default function Play(props : Props) : JSX.Element
             setOpponentName(username);
         });
 
+        props.socket.on("gameReset", () => {
+            reset();
+            setModal(null);
+        });
+
         // listener when a user make a move
         props.socket.on("updateBoard", (board, isPlayer1Turn) => {
             setCurrentBoard(board);   
@@ -102,6 +107,7 @@ export default function Play(props : Props) : JSX.Element
                         btnSecondaryText: "Leave Room",
                         btnPrimaryOnClick : () => {
                             reset();
+                            props.socket.emit("resetGame", getRoomId());
                         },
                         btnSecondaryOnClick : () => {
                             setModal(null);
@@ -120,6 +126,7 @@ export default function Play(props : Props) : JSX.Element
                         btnSecondaryText: "Leave Room",
                         btnPrimaryOnClick : () => {
                             reset();
+                            props.socket.emit("resetGame", getRoomId());
                         },
                         btnSecondaryOnClick : () => {
                             setModal(null);
@@ -220,6 +227,7 @@ export default function Play(props : Props) : JSX.Element
                     btnSecondaryText: "Leave Room",
                     btnPrimaryOnClick : () => {
                         reset();
+                        props.socket.emit("resetGame", getRoomId());
                     },
                     btnSecondaryOnClick : () => {
                         setModal(null);
@@ -238,6 +246,7 @@ export default function Play(props : Props) : JSX.Element
                     btnSecondaryText: "Leave Room",
                     btnPrimaryOnClick : () => {
                         reset();
+                        props.socket.emit("resetGame", getRoomId());
                     },
                     btnSecondaryOnClick : () => {
                         setModal(null);

@@ -52,3 +52,14 @@
         --desc-size: 20px;
     }
 }
+
+@media screen and (max-width: 300px){ 
+    :root {
+        --title-size: 45px;
+    }
+
+    .playButton {
+        width: 100px;
+    }
+}
+

@@ -71,6 +71,10 @@ io.on("connection", socket => {
     socket.on("playerMoved", (board, isPlayer1Turn, roomId) => {
         socket.to(roomId).emit("updateBoard", board, !isPlayer1Turn);
     });
+
+    socket.on("resetGame", (roomId) => {
+        socket.to(roomId).emit("gameReset");
+    })
 });
 
 app.get("/get-room-size/:roomId", (req, res) => {

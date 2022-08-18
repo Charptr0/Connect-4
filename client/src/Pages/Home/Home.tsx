@@ -120,12 +120,10 @@ export default function Home(props : Props) : JSX.Element
 
     function changeToJoinedRoom() {
         scroll();
-        setJoinRoomOption(true);
     }
 
     function changeToCreatedRoom() {
         scroll();
-        setJoinRoomOption(false);
     }
 
     if(loading) {
