@@ -20,6 +20,27 @@
     }
 }
 
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    h1 {
+        font-size: 50px;
+    }
+
+    p {
+        font-size: 40px;
+        margin: 0;
+    }
+
+    div {
+        font-size: 30px;
+    }
+}
+
 .selection {
     display: flex;
     margin: 30px;
@@ -58,6 +79,22 @@
     background-color: rgb(25, 105, 255);
 }
 
+@media screen and (max-width: 800px) {
+    .loadingContainer {
+        h1 {
+            font-size: 35px;
+        }
+    
+        p {
+            font-size: 25px;
+        }
+
+        div {
+            font-size: 20px;
+        }
+    }
+}
+
 @media screen and (max-width: 500px) {
     .selection {
         font-size: 20px;
@@ -81,6 +118,16 @@
     .joinRoomBtn, .createRoomBtn {
         width: 180px;
         font-size: 18px;
+    } 
+}
+
+@media screen and (max-width: 300px) {
+    .loadingContainer {
+        h1 {
+            font-size: 30px;
+        }
+        p {
+            font-size: 20px;
+        }
     }
-    
 }

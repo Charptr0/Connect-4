@@ -7,6 +7,7 @@ import { getUsername, Page, removeRoomId } from "../../Utils";
 import { getCurrentPlayers } from "../Play/Utils";
 import Footer from "./Components/Footer/Footer";
 import Overview from "./Components/Overview/Overview";
+import Loading from "../../Components/Loading/Loading";
 
 interface Props {
     switchPage : Function;
@@ -127,7 +128,17 @@ export default function Home(props : Props) : JSX.Element
     }
 
     if(loading) {
-        return <div>Loading...</div>
+        return <div className={styles.loadingContainer}>
+            <h1>Waking up Heroku Dyno server</h1>
+            <p>This can take a while.....</p>
+            <Loading />
+
+            <div>
+                <span>Still not loading after a refresh?</span><br></br>
+                <span>Let me know if there is an issue</span><br></br>
+                <a href="https://github.com/Charptr0/Connect-4" target="_blank" rel="noreferrer">Github</a>
+            </div>
+        </div>
     }
 
     return (
