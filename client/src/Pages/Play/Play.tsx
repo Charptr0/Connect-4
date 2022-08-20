@@ -16,6 +16,7 @@ import {
 import NotificationModal from "../../Components/NotificationModal/NotificationModal";
 import Modal from "../../Components/Modal/Modal";
 import axios from "axios";
+import Logs from "./Components/Log/Log";
 
 interface Props {
     socket: Socket,
@@ -47,6 +48,7 @@ export default function Play(props : Props) : JSX.Element
     const [opponentName, setOpponentName] = useState<string>('???');
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
+    const [logs, setLogs] = useState<string[]>(["Welcome to the chatroom!"]);
 
     useEffect(() => { 
         // kick the user out of this page if they don't have a room id
@@ -91,6 +93,10 @@ export default function Play(props : Props) : JSX.Element
         props.socket.on("gameReset", () => {
             reset();
             setModal(null);
+        });
+
+        props.socket.on("receiveMessage", (message, opponentUsername) => {
+            setLogs(prev => [...prev, `${opponentUsername}: ${message}`]);
         });
 
         // listener when a user make a move
@@ -259,6 +265,11 @@ export default function Play(props : Props) : JSX.Element
         }
     }
 
+    function sendMessageHandler(message : string) {
+        setLogs(prev => [...prev, `${getUsername()}: ${message}`]);
+        props.socket.emit("sendMessage", getRoomId(), getUsername(), message);
+    }
+
     return (
         <>
             {modal && <Modal 
@@ -271,7 +282,6 @@ export default function Play(props : Props) : JSX.Element
             />}
 
             <div className={styles.flexContainer}>
-
                 <div className={styles.middleContainer}>
                     <h1>Connect 4</h1>
                     <h2>Room Number: {getRoomId()}</h2>
@@ -285,6 +295,8 @@ export default function Play(props : Props) : JSX.Element
                     isPlayer1Turn={isPlayer1Turn} 
                     onPlayerMoveHandler={onPlayerMove}
                 />
+
+                <Logs logs={logs} sendMessageHandler={sendMessageHandler}/>
 
                 <div className={styles.scoreContainer}>
                     <h1>Current Scores</h1>

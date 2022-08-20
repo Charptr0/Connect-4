@@ -74,7 +74,11 @@ io.on("connection", socket => {
 
     socket.on("resetGame", (roomId) => {
         socket.to(roomId).emit("gameReset");
-    })
+    });
+
+    socket.on("sendMessage", (roomId, username, message) => {
+        socket.to(roomId).emit("receiveMessage", message, username);
+    });
 });
 
 app.get("/get-room-size/:roomId", (req, res) => {
