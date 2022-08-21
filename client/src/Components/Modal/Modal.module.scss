@@ -27,6 +27,7 @@
 
     button {
         margin-right: 20px;
+        margin-top: -40px;
         height: 40px;
         font-size: 20px;
         cursor: pointer;
@@ -82,11 +83,18 @@
         font-size: 25px;
         margin-bottom: 50px;
     }
+
+    .btnContainer {
+        button {
+            margin-top: -10px;
+        }
+    }
 }
 
 @media screen and (max-width: 540px) {
     :root {
-        --box-width: 280px;
+        --box-width: 300px;
+        --box-height: 320px
     }
 
     .title {
@@ -101,6 +109,10 @@
 
     .btnContainer {
         flex-direction: column-reverse;
+        
+        button {
+            margin: 1px;
+        }
 
         .btnPrimary {
             width: 100%;

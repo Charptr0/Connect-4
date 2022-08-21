@@ -2,12 +2,12 @@
     width: 400px;
     height: 500px;
     overflow-wrap: break-word;
-    overflow-y: scroll;
+    overflow-y: auto;
     background-color: white;
     border: 1px solid black;
     position: fixed;
     right: 1px;
-    bottom: 1px;
+    bottom: 25px;
 
     .log {
         outline: 1px solid black;
@@ -18,18 +18,28 @@
 }
 
 .inputContainer {
-    position: absolute;
-    bottom: 0px;
+    right: 404px;
 
     input {
-        border-radius: 5px;
-        margin: 5px;
+        position: fixed;
+        width: 300px;
+        bottom: 0px;
+        right: 95px;
+        height: 22px;
+        font-size: 15px;
+        border: 1px solid black;
     }
 
     button {
+        position: fixed;
         width: 100px;
-        border-radius: 5px;
+        border: 1px solid black;
         cursor: pointer;
+        bottom: 1px;
+        right: 0px;
+        font-size: 15px;
+        height: 25px;
+
     }
 }
 
@@ -52,4 +62,15 @@
             background-color: navy;
         }
     }
+}
+
+.closeChat {
+    position: fixed;
+    right: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
 }
