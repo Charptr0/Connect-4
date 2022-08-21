@@ -36,7 +36,7 @@ export default function Logs(props : Props) {
 
     return (
         <>
-        {showChat ? <div ><div className={styles.logContainer} ref={logRef}>
+        {showChat ? <div className={styles.chatContainer}><div className={styles.logContainer} ref={logRef}>
             <button onClick={() => setShowChat(false)} className={styles.closeChat}>X</button>
             {props.logs.map((log, i) => {return <div key={i} className={styles.log}>{log}</div>})}
             </div>

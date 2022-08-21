@@ -1,6 +1,12 @@
+:root {
+    --log-width: 400px;
+    --log-height: 500px;
+    --log-font-size: 20px;
+}
+
 .logContainer {
-    width: 400px;
-    height: 500px;
+    width: var(--log-width);
+    height: var(--log-height);
     overflow-wrap: break-word;
     overflow-y: auto;
     background-color: white;
@@ -11,9 +17,20 @@
 
     .log {
         outline: 1px solid black;
-        font-size: 20px;
+        font-size: var(--log-font-size);
         margin: 5px;
         padding: 5px;
+    }
+
+    .closeChat {
+        position: fixed;
+        right: 30px;
+        width: 30px;
+        height: 30px;
+        font-size: 30px;
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
     }
 }
 
@@ -22,7 +39,7 @@
 
     input {
         position: fixed;
-        width: 300px;
+        width: calc(var(--log-width) - 100px);
         bottom: 0px;
         right: 95px;
         height: 22px;
@@ -64,13 +81,59 @@
     }
 }
 
-.closeChat {
-    position: fixed;
-    right: 30px;
-    width: 30px;
-    height: 30px;
-    font-size: 30px;
-    background-color: transparent;
-    border: 0;
-    cursor: pointer;
+@media screen and (max-width: 1400px) {
+    .openChatContainer {
+        position: relative;
+        margin-bottom: -10px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    :root {
+        --log-width: 300px;
+        --log-height: 280px;
+    }
+
+    .chatContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;        
+
+        .logContainer {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 400px;
+
+            .closeChat {
+                position: absolute;
+                align-self: flex-end;
+            }
+        }
+    }
+
+    
+    .inputContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        text-align: center;
+
+        input {
+            position: relative;
+
+        }
+
+        button {
+            position: relative;
+        }
+    }
+
+    .openChatContainer {
+        position: relative;
+        margin-bottom: -10px;
+    }
 }
