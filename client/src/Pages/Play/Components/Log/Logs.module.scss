@@ -1,7 +1,38 @@
 :root {
-    --log-width: 400px;
+    --log-width: 1000px;
     --log-height: 500px;
     --log-font-size: 20px;
+}
+
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+
+    .closeChat {
+        width: 30px;
+        height: 30px;
+        font-size: 30px;
+        align-self: flex-end;
+        background-color: transparent;
+        border: 0;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    input {
+        width: 800px;
+        height: 30px;
+        font-size: 20px;
+        border-radius: 5px;
+    }
+
+    button {
+        width: 198px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 20px;
+        height: 35px;
+    }
 }
 
 .logContainer {
@@ -11,9 +42,6 @@
     overflow-y: auto;
     background-color: white;
     border: 1px solid black;
-    position: fixed;
-    right: 1px;
-    bottom: 25px;
 
     .log {
         outline: 1px solid black;
@@ -21,49 +49,9 @@
         margin: 5px;
         padding: 5px;
     }
-
-    .closeChat {
-        position: fixed;
-        right: 30px;
-        width: 30px;
-        height: 30px;
-        font-size: 30px;
-        background-color: transparent;
-        border: 0;
-        cursor: pointer;
-    }
-}
-
-.inputContainer {
-    right: 404px;
-
-    input {
-        position: fixed;
-        width: calc(var(--log-width) - 100px);
-        bottom: 0px;
-        right: 95px;
-        height: 22px;
-        font-size: 15px;
-        border: 1px solid black;
-    }
-
-    button {
-        position: fixed;
-        width: 100px;
-        border: 1px solid black;
-        cursor: pointer;
-        bottom: 1px;
-        right: 0px;
-        font-size: 15px;
-        height: 25px;
-
-    }
 }
 
 .openChatContainer {
-    position: fixed;
-    right: 0px;
-    bottom: 0px;
     margin: 20px;
 
     button {
@@ -81,59 +69,50 @@
     }
 }
 
-@media screen and (max-width: 1400px) {
-    .openChatContainer {
-        position: relative;
-        margin-bottom: -10px;
-    }
-}
-
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 1030px) {
     :root {
-        --log-width: 300px;
-        --log-height: 280px;
-    }
+        --log-width: 600px;
 
+    }
     .chatContainer {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;        
-
-        .logContainer {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            width: 400px;
-
-            .closeChat {
-                position: absolute;
-                align-self: flex-end;
-            }
-        }
-    }
-
-    
-    .inputContainer {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        text-align: center;
-
         input {
-            position: relative;
-
+            width: 480px;
         }
 
         button {
-            position: relative;
+            width: 117px;
         }
     }
+}
 
-    .openChatContainer {
-        position: relative;
-        margin-bottom: -10px;
+@media screen and (max-width: 660px) {
+    :root {
+        --log-width: 400px;
+
+    }
+    .chatContainer {
+        input {
+            width: 280px;
+        }
+
+        button {
+            width: 115px;
+        }
+    }
+}
+
+@media screen and (max-width: 440px) {
+    :root {
+        --log-width: 250px;
+
+    }
+    .chatContainer {
+        input {
+            width: 150px;
+        }
+
+        button {
+            width: 96px;
+        }
     }
 }
