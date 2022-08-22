@@ -75,7 +75,7 @@ export default function Play(props : Props) : JSX.Element
 
             if(playerCount === 2) {
                 try {
-                    const res = await axios.get(`http://localhost:4000/get-opponent/${getRoomId()}/${getUsername()}`);
+                    const res = await axios.get(`https://charptr0-connect-4-backend.herokuapp.com/get-opponent/${getRoomId()}/${getUsername()}`);
                     setOpponentName(res.data.username || "NULL");
                     
                 } catch (err) {
@@ -93,10 +93,6 @@ export default function Play(props : Props) : JSX.Element
         props.socket.on("gameReset", () => {
             reset();
             setModal(null);
-        });
-
-        props.socket.on("receiveMessage", (message, opponentUsername) => {
-            setLogs(prev => [...prev, `${opponentUsername}: ${message}`]);
         });
 
         // listener when a user make a move
@@ -170,6 +166,12 @@ export default function Play(props : Props) : JSX.Element
             });
         });
     }, [currentBoard, props.socket, userScore, opponentScore]);
+
+    useEffect(() => {
+        props.socket.on("receiveMessage", (message, opponentUsername) => {
+            setLogs(prev => [...prev, `${opponentUsername}: ${message}`]);
+        })
+    }, []);
 
     function reset() {
         setModal(null);
@@ -266,6 +268,7 @@ export default function Play(props : Props) : JSX.Element
     }
 
     function sendMessageHandler(message : string) {
+
         setLogs(prev => [...prev, `${getUsername()}: ${message}`]);
         props.socket.emit("sendMessage", getRoomId(), getUsername(), message);
     }

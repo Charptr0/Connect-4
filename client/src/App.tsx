@@ -5,7 +5,7 @@ import Play from './Pages/Play/Play';
 import { Page } from './Utils';
 import "./App.scss";
 
-const socket = io("http://localhost:4000", {
+const socket = io("https://charptr0-connect-4-backend.herokuapp.com/", {
   autoConnect : false,
 });
 

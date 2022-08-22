@@ -7,7 +7,7 @@ import { getRoomId } from "../../../Utils/getRoomId";
  */
 export async function getCurrentPlayers() : Promise<number> {
     try {
-        const response = await axios.get(`http://localhost:4000/get-room-size/${getRoomId()}`)   
+        const response = await axios.get(`https://charptr0-connect-4-backend.herokuapp.com/get-room-size/${getRoomId()}`)   
         return response.data.size;
     } catch (err) {
         console.log(err);

@@ -35,7 +35,7 @@ export default function Home(props : Props) : JSX.Element
 
     useEffect(() => {
         removeRoomId();
-        axios.get("http://localhost:4000/status")
+        axios.get("https://charptr0-connect-4-backend.herokuapp.com/status")
             .then(() => {
                 setLoading(false);
             }).catch((err) => {
@@ -78,8 +78,10 @@ export default function Home(props : Props) : JSX.Element
         sessionStorage.setItem("username", username);
 
         try {
-            await axios.get(`http://localhost:4000/room-exist/${roomId}`);
+            await axios.get(`https://charptr0-connect-4-backend.herokuapp.com/room-exist/${roomId}`);
         } catch (err) {
+            console.log(err);
+            
             setModal({
                 title: 'Error!',
                 desc : "The room does not exist :(",
