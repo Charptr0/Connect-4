@@ -72,15 +72,20 @@ io.on("connection", socket => {
         socket.to(roomId).emit("updateBoard", board, !isPlayer1Turn);
     });
 
+    // listener to reset the board
     socket.on("resetGame", (roomId) => {
         socket.to(roomId).emit("gameReset");
     });
 
+    // listener when a user send a message
     socket.on("sendMessage", (roomId, username, message) => {
         socket.to(roomId).emit("receiveMessage", message, username);
     });
 });
 
+/**
+ * Get the room size based on the given room ID
+ */
 app.get("/get-room-size/:roomId", (req, res) => {
     const roomId = req.params.roomId;
 
@@ -97,6 +102,9 @@ app.get("/status", (req, res) => {
     res.send();
 });
 
+/**
+ * Get whether a room is currently exist
+ */
 app.get("/room-exist/:roomId", (req, res) => {
     const roomId = req.params.roomId;
 
@@ -108,6 +116,9 @@ app.get("/room-exist/:roomId", (req, res) => {
 
 })
 
+/**
+ * Get the opponent's name
+ */
 app.get("/get-opponent/:roomId/:userId", (req, res) => {
     const roomId = req.params.roomId;
     const userId = req.params.userId;
@@ -123,6 +134,8 @@ app.get("/get-opponent/:roomId/:userId", (req, res) => {
         return opponent ? res.json(opponent) : res.status(404).send();
     }
 });
+
+app.get("/", (req, res) => res.send());
 
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);
