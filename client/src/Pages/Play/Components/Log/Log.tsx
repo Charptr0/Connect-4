@@ -6,6 +6,9 @@ interface Props {
     sendMessageHandler : Function,
 }
 
+/**
+ * Display the chat window
+ */
 export default function Logs(props : Props) {
     const messageRef = useRef<HTMLInputElement>(null);
     const logRef = useRef<HTMLInputElement>(null);
@@ -28,6 +31,9 @@ export default function Logs(props : Props) {
         scrollToBottom();
     }
 
+    /**
+     * Scroll to the bottom of the chat window
+     */
     function scrollToBottom() {
         if(logRef.current) {
             logRef.current.scrollTop = logRef.current.scrollHeight;
@@ -50,7 +56,6 @@ export default function Logs(props : Props) {
         <div className={styles.openChatContainer}>
             <button onClick={() => {setShowChat(true); scrollToBottom()}}>Open Chat</button>
         </div>}
-
         </>
     )
 }
