@@ -11,8 +11,10 @@ export default function Overview(props : Props)
     return (
         <div className={styles.overview}>
             <h1 className={styles.title}>Connect 4</h1>
-            <button className={styles.playButton} onClick={() => props.changeToCreatedRoom()}>Play Online with Friends</button>
+            <button className={styles.playButton} onClick={() => props.changeToCreatedRoom()}>Create a Room</button>
+            <button className={styles.playButton} onClick={() => props.changeToJoinRoom()}>Join a Room</button>
             <button className={styles.playButton} onClick={() => props.changeToJoinRoom()}>Play Local Co-Op</button>
+
 
             <div className={styles.container}>
                 <BoardDesign />

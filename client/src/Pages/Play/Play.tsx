@@ -296,6 +296,7 @@ export default function Play(props : Props) : JSX.Element
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
+                <Logs logs={logs} sendMessageHandler={sendMessageHandler}/>
 
                 <div className={styles.scoreContainer}>
                     <h1>Current Scores</h1>
@@ -305,7 +306,6 @@ export default function Play(props : Props) : JSX.Element
                     <h2>Your opponent: {opponentName}</h2>
                     <h3>{opponentScore}</h3>
                 </div>
-                <Logs logs={logs} sendMessageHandler={sendMessageHandler}/>
             </div>
         </>
     )

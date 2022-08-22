@@ -31,7 +31,7 @@ export default function Home(props : Props) : JSX.Element
 
     const [modal, setModal] = useState<ModalInterface | null>();  
     const [loading, setLoading] = useState<boolean>(true);
-    const [isJoinRoomOption, setJoinRoomOption] = useState<boolean>(true);
+    const [isCreateRoomOption, setCreateRoomOption] = useState<boolean>(true);
 
     useEffect(() => {
         removeRoomId();
@@ -120,10 +120,12 @@ export default function Home(props : Props) : JSX.Element
     }
 
     function changeToJoinedRoom() {
+        setCreateRoomOption(false);
         scroll();
     }
 
     function changeToCreatedRoom() {
+        setCreateRoomOption(true);
         scroll();
     }
 
@@ -154,13 +156,13 @@ export default function Home(props : Props) : JSX.Element
         />}
         <form className={styles.form}>
             <div className={styles.selection}>
-                <div onClick={() => setJoinRoomOption(true)} className={isJoinRoomOption ? styles.selected : styles.notSelected }>Create Room</div>
-                <div onClick={() => setJoinRoomOption(false)} className={!isJoinRoomOption ? styles.selected : styles.notSelected }>Join Room</div>
+                <div onClick={() => setCreateRoomOption(true)} className={isCreateRoomOption ? styles.selected : styles.notSelected }>Create Room</div>
+                <div onClick={() => setCreateRoomOption(false)} className={!isCreateRoomOption ? styles.selected : styles.notSelected }>Join Room</div>
             </div>
             <label>Username</label><br></br>
             <input type="text" ref={usernameRef} defaultValue={getUsername() || ''}  /><br></br>
 
-            {!isJoinRoomOption ? 
+            {!isCreateRoomOption ? 
             <div>
                 <label>Room</label><br></br>
                 <input type="text" ref={roomRef}/><br></br>
