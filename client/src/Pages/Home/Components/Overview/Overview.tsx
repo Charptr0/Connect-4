@@ -4,6 +4,7 @@ import styles from "./Overview.module.scss";
 interface Props {
     changeToJoinRoom : Function,
     changeToCreatedRoom : Function,
+    playLocalCoop : Function,
 }
 
 export default function Overview(props : Props) 
@@ -13,8 +14,7 @@ export default function Overview(props : Props)
             <h1 className={styles.title}>Connect 4</h1>
             <button className={styles.playButton} onClick={() => props.changeToCreatedRoom()}>Create a Room</button>
             <button className={styles.playButton} onClick={() => props.changeToJoinRoom()}>Join a Room</button>
-            <button className={styles.playButton} onClick={() => props.changeToJoinRoom()}>Play Local Co-Op</button>
-
+            <button className={styles.playButton} onClick={() => props.playLocalCoop()}>Play Local Co-Op</button>
 
             <div className={styles.container}>
                 <BoardDesign />

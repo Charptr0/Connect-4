@@ -131,6 +131,10 @@ export default function Home(props : Props) : JSX.Element
         scroll();
     }
 
+    function playLocalCoop() {
+        props.switchPage(Page.PlayLocal);
+    }
+
     if(loading) {
         return <div className={styles.loadingContainer}>
             <h1>Waking up Heroku Dyno server</h1>
@@ -147,7 +151,7 @@ export default function Home(props : Props) : JSX.Element
 
     return (
     <>      
-        <Overview changeToJoinRoom={changeToJoinedRoom} changeToCreatedRoom={changeToCreatedRoom} />
+        <Overview changeToJoinRoom={changeToJoinedRoom} changeToCreatedRoom={changeToCreatedRoom} playLocalCoop={playLocalCoop} />
         {modal && <Modal
             title={modal.title}
             desc={modal.desc}
