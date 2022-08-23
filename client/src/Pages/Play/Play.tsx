@@ -180,6 +180,7 @@ export default function Play(props : Props) : JSX.Element
         setWinnerFound(false);
         setPlayer1Turn(true);
         setAllowToMove(true);
+        
     }
     
     /**
@@ -300,6 +301,7 @@ export default function Play(props : Props) : JSX.Element
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
+                {winnerFound && <div className={styles.newGameBtnContainer}><button onClick={() => {reset(); props.socket.emit("resetGame", getRoomId());}}>Start New Game</button></div>}
                 <Logs logs={logs} sendMessageHandler={sendMessageHandler}/>
 
                 <div className={styles.scoreContainer}>

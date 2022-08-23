@@ -24,6 +24,7 @@ export default function PlayLocal() {
     const [modal, setModal] = useState<ModalInterface | null>();
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
+    const [winnerFound, setWinnerFound] = useState<boolean>(false);
 
     /**
      * Update the board and send the request to the other player
@@ -66,6 +67,8 @@ export default function PlayLocal() {
          }
          
          if(checkWinner(currentBoard) !== Cell.EMPTY) {
+            setWinnerFound(true);
+
              if(isPlayer1Turn) {
                  setModal({
                      title: "A winner has been found!",
@@ -111,6 +114,7 @@ export default function PlayLocal() {
         setCurrentBoard(initializeBoard());
 
         setPlayer1Turn(true);
+        setWinnerFound(false);
     }
 
     return (
@@ -136,6 +140,7 @@ export default function PlayLocal() {
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
+                {winnerFound && <div className={styles.newGameBtnContainer}><button onClick={reset}>Start New Game</button></div>}
                 <div className={styles.scoreContainer}>
                     <h1>Current Scores</h1>
                     <h2>Player 1</h2>
