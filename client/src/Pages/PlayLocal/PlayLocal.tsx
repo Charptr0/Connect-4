@@ -25,6 +25,7 @@ export default function PlayLocal() {
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
+    const [allowToMove, setAllowToMove] = useState<boolean>(false);
 
     /**
      * Update the board and send the request to the other player
@@ -33,6 +34,8 @@ export default function PlayLocal() {
      */
      function onPlayerMove(col : number)
      {
+        if(!allowToMove) return;
+        
          // prevent the user from making a move when a column is full
          if(currentBoard[0][col] !== Cell.EMPTY) {
              setModal({
@@ -68,6 +71,7 @@ export default function PlayLocal() {
          
          if(checkWinner(currentBoard) !== Cell.EMPTY) {
             setWinnerFound(true);
+            setAllowToMove(false);
 
              if(isPlayer1Turn) {
                  setModal({
@@ -115,6 +119,7 @@ export default function PlayLocal() {
 
         setPlayer1Turn(true);
         setWinnerFound(false);
+        setAllowToMove(true);
     }
 
     return (
@@ -140,7 +145,7 @@ export default function PlayLocal() {
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
-                {winnerFound && <div className={styles.newGameBtnContainer}><button onClick={reset}>Start New Game</button></div>}
+                {winnerFound && <div className={styles.utilBtnContainer}><button onClick={reset}>Start New Game</button></div>}
                 <div className={styles.scoreContainer}>
                     <h1>Current Scores</h1>
                     <h2>Player 1</h2>
