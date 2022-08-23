@@ -25,7 +25,7 @@ export default function PlayLocal() {
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
     const [winnerFound, setWinnerFound] = useState<boolean>(false);
-    const [allowToMove, setAllowToMove] = useState<boolean>(false);
+    const [allowToMove, setAllowToMove] = useState<boolean>(true);
 
     /**
      * Update the board and send the request to the other player
