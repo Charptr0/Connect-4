@@ -122,6 +122,7 @@ export default function PlayLocal() {
                 btnSecondaryText={modal.btnSecondaryText}
                 btnPrimaryOnClick={modal.btnPrimaryOnClick}
                 btnSecondaryOnClick={modal.btnSecondaryOnClick}
+                backdropOnClick={() => setModal(null)}
             />}
 
             <div className={styles.flexContainer}>

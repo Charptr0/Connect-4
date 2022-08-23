@@ -1,14 +1,15 @@
 import styles from "./Backdrop.module.scss";
 
-interface Children {
-    children : React.ReactNode
+interface Props {
+    children: React.ReactNode,
+    onClick : React.MouseEventHandler<HTMLDivElement>
 }
 
-export default function Backdrop({children} : Children) 
+export default function Backdrop(props : Props) 
 {
     return (
-        <div className={styles.backdrop}>
-            {children}
+        <div className={styles.backdrop} onClick={props.onClick}>
+            {props.children}
         </div>
     )
 }

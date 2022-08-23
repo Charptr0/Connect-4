@@ -8,6 +8,7 @@ export interface Props {
     btnSecondaryText : string;
     btnPrimaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
     btnSecondaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
+    backdropOnClick : React.MouseEventHandler<HTMLDivElement>;
 }
 
 /**
@@ -26,13 +27,15 @@ export interface Props {
  * btnPrimaryOnClick - the function is called when the primary button is clicked
  * 
  * btnSecondaryOnClick - the function is called when the secondary button is clicked
+ * 
+ * backdropOnClick - the function is called when the backdrop is clicked
  *  
  * @param props
  */
 export default function Modal(props : Props) 
 {
     return (
-        <Backdrop>
+        <Backdrop onClick={props.backdropOnClick}>
             <div className={styles.modal}>
                 <h2 className={styles.title}>{props.title}</h2>
                 <p className={styles.desc}>{props.desc}</p>

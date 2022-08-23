@@ -159,6 +159,7 @@ export default function Home(props : Props) : JSX.Element
             btnSecondaryText={modal.btnSecondaryText}
             btnPrimaryOnClick={modal.btnPrimaryOnClick}
             btnSecondaryOnClick={modal.btnSecondaryOnClick} 
+            backdropOnClick={() => setModal(null)}
         />}
         <form className={styles.form}>
             <div className={styles.selection}>

@@ -282,6 +282,7 @@ export default function Play(props : Props) : JSX.Element
                 btnSecondaryText={modal.btnSecondaryText}
                 btnPrimaryOnClick={modal.btnPrimaryOnClick}
                 btnSecondaryOnClick={modal.btnSecondaryOnClick}
+                backdropOnClick={() => setModal(null)}
             />}
 
             <div className={styles.flexContainer}>
