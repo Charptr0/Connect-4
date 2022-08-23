@@ -48,6 +48,7 @@ export default function Play(props : Props) : JSX.Element
     const [opponentName, setOpponentName] = useState<string>('???');
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
+    const [notificationText, setNotificationText] = useState<string>('');
     const [logs, setLogs] = useState<string[]>(["Welcome to the chatroom!"]);
 
     useEffect(() => { 
@@ -72,6 +73,7 @@ export default function Play(props : Props) : JSX.Element
             props.socket.emit("joinRoom", getRoomId(), getUsername());
             const playerCount = await getCurrentPlayers();
             setTotalPlayers(playerCount);
+            setNotificationText("Waiting for an another player");
 
             if(playerCount === 2) {
                 try {
@@ -151,6 +153,7 @@ export default function Play(props : Props) : JSX.Element
         // listener when a user disconnect from the room
         props.socket.on("playerLeft", async () => {
             props.socket.disconnect();
+            setNotificationText("The player left");
             
             setTotalPlayers(await getCurrentPlayers());
             setModal({
@@ -292,7 +295,7 @@ export default function Play(props : Props) : JSX.Element
                     <h2>Room Number: {getRoomId()}</h2>
                 </div>
 
-                {totalPlayers < 2 && <NotificationModal  text="Waiting for an another player"/>}
+                {totalPlayers < 2 && <NotificationModal  text={notificationText}/>}
                 {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
 
                 <Board 
@@ -301,7 +304,8 @@ export default function Play(props : Props) : JSX.Element
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
-                {winnerFound && <div className={styles.newGameBtnContainer}><button onClick={() => {reset(); props.socket.emit("resetGame", getRoomId());}}>Start New Game</button></div>}
+                {winnerFound && totalPlayers === 2 && <div className={styles.utilBtnContainer}><button onClick={() => {reset(); props.socket.emit("resetGame", getRoomId());}}>Start New Game</button></div>}
+                <div className={styles.utilBtnContainer}><button onClick={() => window.location.reload()}>Leave Room</button></div>
                 <Logs logs={logs} sendMessageHandler={sendMessageHandler}/>
 
                 <div className={styles.scoreContainer}>
