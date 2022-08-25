@@ -5,26 +5,26 @@ Play Connect 4 online with friends
 ## Features
 * Users can have private 1v1 matches with other users by creating or joining a room.
 * The User can exchange messages via chat once they are connected.
-* Users can play connect 4 locally without connecting to a room.
+* Users can play Connect 4 locally without connecting to a room.
 
 ## Instructions
 
 ### Creating a room
-To create a room, first give yourself a username (if this is null, then it will default to 'Guest'), and click `Create Room`.
+To create a room, first, give yourself a username (if this is null, then it will default to 'Guest'), and click `Create Room`.
 
-This will generate a room with an unique ID, to invite another user, simply give them the ID.
+This will generate a room with a unique ID, to invite another user, simply give them the ID.
 
 ### Joining a room
-To join a existing room, first give yourself a username (if this is null, then it will default to 'Guest'), enter the room ID that is given to you, and click `Join Room`.
+To join an existing room, first, give yourself a username (if this is null, then it will default to 'Guest'), enter the room ID that is given to you, and click `Join Room`.
 
-If the room exists and it is not full, you will be allow in.
+If the room exists and it is not full, you will be allowed in.
 
-### Staring a match
-To start a match, once the room has hit capacity (2 players), the game will automatically starts, whoever goes first will be yellow and the other will be red.
+### Starting a match
+To start a match, once the room has hit capacity (2 players), the game will automatically start, whoever goes first will be yellow and the other will be red.
 The game will end once a winner is found.
 
 ### Leaving a match
-To leave, simply click the `Leave Room` button or refresh the page. This will automatically disconnect you from the room and route you back to the homepage. Please keep in mind that this will also disconnect the other user as well. The match will also end if you leave midgame.
+To leave, simply click the `Leave Room` button or refresh the page. This will automatically disconnect you from the room and route you back to the homepage. Please keep in mind that this will also disconnect the other user. The match will also end if you leave midgame.
 
 ## Website
 
