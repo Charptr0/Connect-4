@@ -145,7 +145,7 @@ export default function PlayLocal() {
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
-                {winnerFound && <div className={styles.utilBtnContainer}><button onClick={reset}>Start New Game</button></div>}
+                <div className={styles.utilBtnContainer}><button onClick={reset}>Start New Game</button></div>
                 <div className={styles.scoreContainer}>
                     <h1>Current Scores</h1>
                     <h2>Player 1</h2>

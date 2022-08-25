@@ -304,7 +304,7 @@ export default function Play(props : Props) : JSX.Element
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
-                {winnerFound && totalPlayers === 2 && <div className={styles.utilBtnContainer}><button onClick={() => {reset(); props.socket.emit("resetGame", getRoomId());}}>Start New Game</button></div>}
+                {totalPlayers === 2 && <div className={styles.utilBtnContainer}><button onClick={() => {reset(); props.socket.emit("resetGame", getRoomId());}}>Start New Game</button></div>}
                 <div className={styles.utilBtnContainer}><button onClick={() => window.location.reload()}>Leave Room</button></div>
                 <Logs logs={logs} sendMessageHandler={sendMessageHandler}/>
 
