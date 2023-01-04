@@ -31,12 +31,10 @@ To leave, simply click the `Leave Room` button or refresh the page. This will au
 ### Frontend
 https://connect4-41333.web.app/
 
-Built using React and SASS
+Built using React and SASS and deployed using Firebase
 
 ### Backend
-https://charptr0-connect-4-backend.herokuapp.com/
-
-Built using Express and Socket.io
+Built using Express and Socket.io and deployed using AWS
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/70610982/186554273-128e6561-b352-4198-88e2-9972ee66bb38.png)
