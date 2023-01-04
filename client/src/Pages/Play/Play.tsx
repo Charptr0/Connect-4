@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import Board from "./Components/Board/Board";
 import styles from "./Play.module.scss";
 import { Socket } from "socket.io-client";
-import { 
-    Cell, 
-    checkWinner, 
-    getCurrentPlayers, 
-    initializeBoard, 
+import {
+    Cell,
+    checkWinner,
+    getCurrentPlayers,
+    initializeBoard,
 } from "./Utils";
 import {
-    getRoomId, 
+    getRoomId,
     getUsername,
     removeRoomId,
 } from '../../Utils';
@@ -20,24 +20,23 @@ import Logs from "./Components/Log/Log";
 
 interface Props {
     socket: Socket,
-    switchPage : Function,
-    opponentName? : string
+    switchPage: Function,
+    opponentName?: string
 }
 
 interface ModalInterface {
-    title : string;
-    desc : string;
-    btnPrimaryText : string;
-    btnSecondaryText : string;
-    btnPrimaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
-    btnSecondaryOnClick : React.MouseEventHandler<HTMLButtonElement>;
+    title: string;
+    desc: string;
+    btnPrimaryText: string;
+    btnSecondaryText: string;
+    btnPrimaryOnClick: React.MouseEventHandler<HTMLButtonElement>;
+    btnSecondaryOnClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 /**
  * Render the page for playing online 
  */
-export default function Play(props : Props) : JSX.Element 
-{
+export default function Play(props: Props): JSX.Element {
     const [currentBoard, setCurrentBoard] = useState<number[][]>(initializeBoard());
     const [isPlayer1Turn, setPlayer1Turn] = useState<boolean>(true);
     const [allowToMove, setAllowToMove] = useState<boolean>(true);
@@ -51,21 +50,21 @@ export default function Play(props : Props) : JSX.Element
     const [notificationText, setNotificationText] = useState<string>('');
     const [logs, setLogs] = useState<string[]>(["Welcome to the chatroom!"]);
 
-    useEffect(() => { 
+    useEffect(() => {
         // kick the user out of this page if they don't have a room id
-        if(!getRoomId()) {
+        if (!getRoomId()) {
             return;
         }
-        
+
         // set the current user to their username
         // if no username was provided, default to guest
         setUsername(getUsername() || 'Guest');
 
-        window.addEventListener('beforeunload', () => {            
+        window.addEventListener('beforeunload', () => {
             removeRoomId();
             props.socket.disconnect();
         });
-        
+
         props.socket.connect();
 
         // on open listener
@@ -75,11 +74,11 @@ export default function Play(props : Props) : JSX.Element
             setTotalPlayers(playerCount);
             setNotificationText("Waiting for an another player");
 
-            if(playerCount === 2) {
+            if (playerCount === 2) {
                 try {
-                    const res = await axios.get(`https://charptr0-connect-4-backend.herokuapp.com/get-opponent/${getRoomId()}/${getUsername()}`);
+                    const res = await axios.get(`https://connect4-backend.charptrzero.net/get-opponent/${getRoomId()}/${getUsername()}`);
                     setOpponentName(res.data.username || "NULL");
-                    
+
                 } catch (err) {
                     console.log(err);
                 }
@@ -99,21 +98,21 @@ export default function Play(props : Props) : JSX.Element
 
         // listener when a user make a move
         props.socket.on("updateBoard", (board, isPlayer1Turn) => {
-            setCurrentBoard(board);   
-                     
-            if(checkWinner(board) !== Cell.EMPTY) {
+            setCurrentBoard(board);
+
+            if (checkWinner(board) !== Cell.EMPTY) {
                 setWinnerFound(true);
-                if(isPlayer1Turn) {
+                if (isPlayer1Turn) {
                     setModal({
                         title: "A winner has been found!",
-                        desc : "You Win",
+                        desc: "You Win",
                         btnPrimaryText: "Start a New Game",
                         btnSecondaryText: "Leave Room",
-                        btnPrimaryOnClick : () => {
+                        btnPrimaryOnClick: () => {
                             reset();
                             props.socket.emit("resetGame", getRoomId());
                         },
-                        btnSecondaryOnClick : () => {
+                        btnSecondaryOnClick: () => {
                             setModal(null);
                             window.location.reload();
                         },
@@ -121,18 +120,18 @@ export default function Play(props : Props) : JSX.Element
 
                     setUserScore(userScore + 1);
                 }
-    
+
                 else {
                     setModal({
                         title: "A winner has been found!",
-                        desc : "You Lose",
+                        desc: "You Lose",
                         btnPrimaryText: "Start a New Game",
                         btnSecondaryText: "Leave Room",
-                        btnPrimaryOnClick : () => {
+                        btnPrimaryOnClick: () => {
                             reset();
                             props.socket.emit("resetGame", getRoomId());
                         },
-                        btnSecondaryOnClick : () => {
+                        btnSecondaryOnClick: () => {
                             setModal(null);
                             window.location.reload();
                         },
@@ -154,18 +153,18 @@ export default function Play(props : Props) : JSX.Element
         props.socket.on("playerLeft", async () => {
             props.socket.disconnect();
             setNotificationText("The player left");
-            
+
             setTotalPlayers(await getCurrentPlayers());
             setModal({
                 title: "Heads Up!",
-                desc : "The other player have disconnected from the room.",
+                desc: "The other player have disconnected from the room.",
                 btnPrimaryText: "Leave Room",
                 btnSecondaryText: "Close",
-                btnPrimaryOnClick : () => {
+                btnPrimaryOnClick: () => {
                     setModal(null);
                     window.location.reload();
                 },
-                btnSecondaryOnClick : () => setModal(null),
+                btnSecondaryOnClick: () => setModal(null),
             });
         });
     }, [currentBoard, props.socket, userScore, opponentScore]);
@@ -183,29 +182,28 @@ export default function Play(props : Props) : JSX.Element
         setWinnerFound(false);
         setPlayer1Turn(true);
         setAllowToMove(true);
-        
+
     }
-    
+
     /**
      * Update the board and send the request to the other player
      * 
      * @param col the column number that the user has clicked
      */
-    function onPlayerMove(col : number)
-    {
-        if(!allowToMove || totalPlayers < 2) return;
+    function onPlayerMove(col: number) {
+        if (!allowToMove || totalPlayers < 2) return;
 
         // prevent the user from making a move when a column is full
-        if(currentBoard[0][col] !== Cell.EMPTY) {
+        if (currentBoard[0][col] !== Cell.EMPTY) {
             setModal({
                 title: "Error!",
-                desc : "Invalid Placement",
+                desc: "Invalid Placement",
                 btnPrimaryText: "Ok",
                 btnSecondaryText: "Close",
-                btnPrimaryOnClick : () => {
+                btnPrimaryOnClick: () => {
                     setModal(null);
                 },
-                btnSecondaryOnClick : () => {
+                btnSecondaryOnClick: () => {
                     setModal(null);
                 },
             });
@@ -215,11 +213,11 @@ export default function Play(props : Props) : JSX.Element
 
         // search from bottom to top
         // we will place the player in the first empty cell
-        for(let i = currentBoard.length - 1; i >= 0; i--) {
+        for (let i = currentBoard.length - 1; i >= 0; i--) {
             const cell = currentBoard[i][col];
 
             // cell is found empty
-            if(cell === Cell.EMPTY) {
+            if (cell === Cell.EMPTY) {
                 // update board
                 isPlayer1Turn ? currentBoard[i][col] = Cell.PLAYER_1 : currentBoard[i][col] = Cell.PLAYER_2;
                 setCurrentBoard(currentBoard);
@@ -228,20 +226,20 @@ export default function Play(props : Props) : JSX.Element
                 break;
             }
         }
-        
-        if(checkWinner(currentBoard) !== Cell.EMPTY) {
+
+        if (checkWinner(currentBoard) !== Cell.EMPTY) {
             setWinnerFound(true);
-            if(isPlayer1Turn) {
+            if (isPlayer1Turn) {
                 setModal({
                     title: "A winner has been found!",
-                    desc : "You Win",
+                    desc: "You Win",
                     btnPrimaryText: "Start a New Game",
                     btnSecondaryText: "Leave Room",
-                    btnPrimaryOnClick : () => {
+                    btnPrimaryOnClick: () => {
                         reset();
                         props.socket.emit("resetGame", getRoomId());
                     },
-                    btnSecondaryOnClick : () => {
+                    btnSecondaryOnClick: () => {
                         setModal(null);
                         window.location.reload();
                     },
@@ -253,14 +251,14 @@ export default function Play(props : Props) : JSX.Element
             else {
                 setModal({
                     title: "A winner has been found!",
-                    desc : "You Lose",
+                    desc: "You Lose",
                     btnPrimaryText: "Start a New Game",
                     btnSecondaryText: "Leave Room",
-                    btnPrimaryOnClick : () => {
+                    btnPrimaryOnClick: () => {
                         reset();
                         props.socket.emit("resetGame", getRoomId());
                     },
-                    btnSecondaryOnClick : () => {
+                    btnSecondaryOnClick: () => {
                         setModal(null);
                         window.location.reload();
                     },
@@ -271,7 +269,7 @@ export default function Play(props : Props) : JSX.Element
         }
     }
 
-    function sendMessageHandler(message : string) {
+    function sendMessageHandler(message: string) {
 
         setLogs(prev => [...prev, `${getUsername()}: ${message}`]);
         props.socket.emit("sendMessage", getRoomId(), getUsername(), message);
@@ -279,7 +277,7 @@ export default function Play(props : Props) : JSX.Element
 
     return (
         <>
-            {modal && <Modal 
+            {modal && <Modal
                 title={modal.title}
                 desc={modal.desc}
                 btnPrimaryText={modal.btnPrimaryText}
@@ -295,18 +293,18 @@ export default function Play(props : Props) : JSX.Element
                     <h2>Room Number: {getRoomId()}</h2>
                 </div>
 
-                {totalPlayers < 2 && <NotificationModal  text={notificationText}/>}
+                {totalPlayers < 2 && <NotificationModal text={notificationText} />}
                 {totalPlayers === 2 && !allowToMove && !winnerFound ? <NotificationModal text="Waiting on your opponent" /> : null}
 
-                <Board 
-                    board={currentBoard}  
-                    isPlayer1Turn={isPlayer1Turn} 
+                <Board
+                    board={currentBoard}
+                    isPlayer1Turn={isPlayer1Turn}
                     onPlayerMoveHandler={onPlayerMove}
                 />
 
-                {totalPlayers === 2 && <div className={styles.utilBtnContainer}><button onClick={() => {reset(); props.socket.emit("resetGame", getRoomId());}}>Start New Game</button></div>}
+                {totalPlayers === 2 && <div className={styles.utilBtnContainer}><button onClick={() => { reset(); props.socket.emit("resetGame", getRoomId()); }}>Start New Game</button></div>}
                 <div className={styles.utilBtnContainer}><button onClick={() => window.location.reload()}>Leave Room</button></div>
-                <Logs logs={logs} sendMessageHandler={sendMessageHandler}/>
+                <Logs logs={logs} sendMessageHandler={sendMessageHandler} />
 
                 <div className={styles.scoreContainer}>
                     <h1>Current Scores</h1>

@@ -6,20 +6,20 @@ import { Page } from './Utils';
 import "./App.scss";
 import PlayLocal from './Pages/PlayLocal/PlayLocal';
 
-const socket = io("https://charptr0-connect-4-backend.herokuapp.com/", {
-  autoConnect : false,
+const socket = io("https://connect4-backend.charptrzero.net", {
+  autoConnect: false,
 });
 
 function App() {
   const [page, switchPage] = usePages(Page.Home);
-  
-  return (
-  <>
-    {page === Page.Home && <Home switchPage={switchPage} />}
-    {page === Page.PlayOnline && <Play socket={socket} switchPage={switchPage} />}
-    {page === Page.PlayLocal && <PlayLocal />}
 
-  </>
+  return (
+    <>
+      {page === Page.Home && <Home switchPage={switchPage} />}
+      {page === Page.PlayOnline && <Play socket={socket} switchPage={switchPage} />}
+      {page === Page.PlayLocal && <PlayLocal />}
+
+    </>
   );
 }
 
